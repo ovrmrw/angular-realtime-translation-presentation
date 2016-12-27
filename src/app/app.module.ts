@@ -7,12 +7,18 @@ import { AppComponent } from './app.component';
 
 import { LibModule } from '../lib/lib.module';
 import { MicComponent } from './mic.component';
+import { SlideComponent } from './slide.component';
+import { ShootingComponent } from './shooting/shooting.component';
+import { ShootingTowerComponent } from './shooting/shooting-tower.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MicComponent,
+    SlideComponent,
+    ShootingComponent,
+    ShootingTowerComponent,
   ],
   imports: [
     BrowserModule,

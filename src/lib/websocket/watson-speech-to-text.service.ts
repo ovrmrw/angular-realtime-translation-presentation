@@ -9,7 +9,6 @@ import {
   RecognizedDataAction, PushTranscriptAction, PushTranslatedAction
 } from '../store';
 
-
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
 
 
@@ -48,23 +47,36 @@ export class WatsonSpeechToTextWebSocketService {
                 // console.log('ws.onmessage:', event);
                 const data = JSON.parse(event.data) as RecognizedObject;
                 console.log('data:', data);
-                this.dispatcher$.next(new RecognizedDataAction(data));
 
-                setTimeout(() => {
-                  if (data && !lodash.isEqual(this._cachedData, data)) {
-                    if (data.results[0].final) { // 認識が完了しているかどうか。
-                      this._cachedData = data;
-                      const transcript = data.results[0].alternatives[0].transcript;
-                      // console.log('final:', state.recognized.results[0].alternatives[0].transcript);
-                      this.dispatcher$.next(new PushTranscriptAction(transcript));
+                if (data) {
+                  this.dispatcher$.next(new RecognizedDataAction(data));
 
-                      this.dispatcher$.next(
-                        this.translateService.requestTranslate(transcript)
-                          .then(translated => new PushTranslatedAction(translated))
-                      );
-                    }
+                  if (data.results[0].final) {
+                    const transcript = data.results[0].alternatives[0].transcript;
+                    this.dispatcher$.next(new PushTranscriptAction(transcript));
+                    this.dispatcher$.next(
+                      this.translateService.requestTranslate(transcript)
+                        .then(translated => new PushTranslatedAction(translated))
+                    );
                   }
-                }, 0);
+                }
+
+
+                // setTimeout(() => {
+                //   if (data && !lodash.isEqual(this._cachedData, data)) {
+                //     if (data.results[0].final) { // 認識が完了しているかどうか。
+                //       this._cachedData = data;
+                //       const transcript = data.results[0].alternatives[0].transcript;
+                //       // console.log('final:', state.recognized.results[0].alternatives[0].transcript);
+                //       this.dispatcher$.next(new PushTranscriptAction(transcript));
+
+                //       this.dispatcher$.next(
+                //         this.translateService.requestTranslate(transcript)
+                //           .then(translated => new PushTranslatedAction(translated))
+                //       );
+                //     }
+                //   }
+                // }, 0);
               };
 
               this.ws.onerror = (event) => {

@@ -8,6 +8,7 @@ import { WatsonSpeechToTextService } from '../lib/watson';
 @Component({
   selector: 'app-root',
   template: `
+    <app-slide></app-slide>
     <app-mic></app-mic>    
     <ul>
       <li *ngFor="let transcript of transcriptList">{{transcript}}</li>
@@ -16,6 +17,7 @@ import { WatsonSpeechToTextService } from '../lib/watson';
       <li *ngFor="let translated of translatedList">{{translated}}</li>
     </ul>
     <pre>{{recognized | json}}</pre>
+    <app-shooting-tower></app-shooting-tower>
   `,
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
