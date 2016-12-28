@@ -6,19 +6,19 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 import { LibModule } from '../lib/lib.module';
-import { MicComponent } from './mic.component';
+import { MicrophoneComponent } from './microphone.component';
 import { SlideComponent } from './slide.component';
-import { ShootingComponent } from './shooting/shooting.component';
-import { ShootingTowerComponent } from './shooting/shooting-tower.component';
+import { MeteorComponent } from './meteor/meteor.component';
+import { MeteorTowerComponent } from './meteor/meteor-tower.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MicComponent,
+    MicrophoneComponent,
     SlideComponent,
-    ShootingComponent,
-    ShootingTowerComponent,
+    MeteorComponent,
+    MeteorTowerComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
-
-const SLIDE_URL = 'https://docs.google.com/presentation/d/1rwmyRW99N4ZAPM5gyDGjgv0yvJXVATUom6rNxAZrYvQ';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -25,6 +24,16 @@ export class SlideComponent implements OnInit {
 
 
   ngOnInit() {
+    this.resizeScreen();
+
+    Observable.fromEvent<Event>(window, 'resize')
+      .subscribe(event => {
+        this.resizeScreen();
+      });
+  }
+
+
+  resizeScreen() {
     this.screenWidth = window.innerWidth;
     this.screenHeight = window.innerHeight - 50;
     this.cd.markForCheck();

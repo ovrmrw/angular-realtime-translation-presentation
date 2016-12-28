@@ -1,23 +1,22 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MicService } from '../lib/mic';
+import { MicrophoneService } from '../lib/microphone';
 
 
 @Component({
-  selector: 'app-mic',
+  selector: 'app-microphone',
   template: `
     <button class="btn btn-primary" (click)="record()">Mic Record</button>
     <button class="btn btn-secondary" (click)="stop()">Mic Stop</button>
 	`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MicComponent {
+export class MicrophoneComponent {
   btnDisabled: boolean = false;
   message: string;
 
 
   constructor(
-    // private chatService: NewWebSocketService,
-    private micService: MicService,
+    private micService: MicrophoneService,
   ) { }
 
 

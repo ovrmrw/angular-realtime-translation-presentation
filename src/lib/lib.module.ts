@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { WebSocketModule } from './websocket';
 import { StoreModule } from './store';
-import { MicModule } from './mic';
+import { MicrophoneModule } from './microphone';
 import { WatsonModule } from './watson';
 import { GcpModule } from './gcp';
 
@@ -11,7 +11,7 @@ import { GcpModule } from './gcp';
   imports: [
     WebSocketModule,
     StoreModule,
-    MicModule,
+    MicrophoneModule,
     WatsonModule,
     GcpModule,
   ]

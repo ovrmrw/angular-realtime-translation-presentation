@@ -1,0 +1,10 @@
+.meteor {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  white-space: nowrap;
+  font-size: 50pt;
+  font-weight: 600;
+  color: springgreen;
+  text-shadow: 2px 2px 5px black;
+}
