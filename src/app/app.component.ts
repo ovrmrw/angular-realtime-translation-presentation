@@ -23,15 +23,15 @@ import { WatsonSpeechToTextService } from '../lib/watson';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends Disposer implements OnInit, OnDestroy {
-  title = 'app works!';
   recognized;
   transcriptList: string[];
   translatedList: string[];
 
+
   constructor(
     private store: Store,
     private cd: ChangeDetectorRef,
-    private wsttService: WatsonSpeechToTextService,
+    // private wsttService: WatsonSpeechToTextService,
   ) {
     super();
   }

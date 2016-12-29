@@ -14,7 +14,7 @@ import {
   contentStateReducer, restoreStateMapper, afterRestoredStateReducer,
   transcriptListStateReducer, transcriptStateReducer,
   translatedStateReducer, translatedListStateReducer,
-  watsonConfigStateReducer, recognizedStateReducer,
+  watsonConfigStateReducer, recognizedStateReducer, microphoneStateReducer,
 } from './reducers';
 
 
@@ -36,6 +36,9 @@ const initialState: AppState = {
     playbackON: false,
   },
   recognized: null,
+  microphoneState: {
+    ready: false
+  }
 };
 
 
@@ -64,7 +67,8 @@ export class Store {
   private createDispatcherQueue(): void {
     this.dispatcherQueue$ = // DispatcherではなくDispatcherQueueをReducerに代入する。
       this.dispatcher$
-        .concatMap(action => { // Actionをdispatch順に処理する。
+        // .concatMap(action => { // Actionをdispatch順に処理する。
+        .mergeMap(action => {
           if (action instanceof Promise || action instanceof Observable) {
             return Observable.from(action);
           } else {
@@ -84,12 +88,13 @@ export class Store {
         translatedStateReducer(initialState.translated, this.dispatcherQueue$),
         translatedListStateReducer(initialState.translatedList, this.dispatcherQueue$),
         watsonConfigStateReducer(initialState.speechToText, this.dispatcherQueue$),
+        microphoneStateReducer(initialState.microphoneState, this.dispatcherQueue$),
         contentStateReducer(initialState.content, this.dispatcherQueue$),
         restoreStateMapper(this.dispatcherQueue$),
         afterRestoredStateReducer(initialState.afterRestored, this.dispatcherQueue$),
 
-        (recognized, transcript, transcriptList, translated, translatedList, speechToText, content, restore, afterRestored): AppState => {
-          const obj = { recognized, transcript, transcriptList, translated, translatedList, speechToText, content, restore, afterRestored };
+        (recognized, transcript, transcriptList, translated, translatedList, speechToText, microphoneState, content, restore, afterRestored): AppState => {
+          const obj = { recognized, transcript, transcriptList, translated, translatedList, speechToText, microphoneState, content, restore, afterRestored };
           return Object.assign<{}, AppState, {}>({}, initialState, obj);
         }
       ])

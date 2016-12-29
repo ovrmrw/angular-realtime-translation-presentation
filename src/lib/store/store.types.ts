@@ -10,6 +10,12 @@ export interface AppState {
   uuid: string;
   speechToText: WatsonSpeechToText;
   recognized: RecognizedObject | null;
+  microphoneState: MicrophoneState;
+}
+
+
+export interface MicrophoneState {
+  ready: boolean;
 }
 
 
@@ -36,6 +42,7 @@ export interface RecognizedObject {
   result_index: number;
   results: RecognizedResult[];
   state?: string;
+  error?: string;
 }
 
 export interface RecognizedResult {

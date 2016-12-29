@@ -1,10 +1,10 @@
 import { Dispatcher, StateReducer, NonStateReducer } from './common';
-import { WatsonSpeechToText, RecognizedObject } from './store.types';
+import { WatsonSpeechToText, RecognizedObject, MicrophoneState } from './store.types';
 import {
   Action,
   UpdateContentAction, RestoreAction,
   RecognizedDataAction, TokenAction,
-  PushTranscriptAction, PushTranslatedAction,
+  PushTranscriptAction, PushTranslatedAction, MicStateAction,
 } from './actions';
 
 
@@ -118,6 +118,20 @@ export const translationStateReducer: StateReducer<WatsonSpeechToText> =
     dispatcher$.scan((state, action) => {
       if (action instanceof TokenAction) {
         return Object.assign(state, { token: action.token });
+      } else {
+        return state;
+      }
+    }, initState);
+
+
+
+export const microphoneStateReducer: StateReducer<MicrophoneState> =
+  (initState: MicrophoneState, dispatcher$: Dispatcher<Action>) =>
+    dispatcher$.scan((state, action) => {
+      if (action instanceof MicStateAction) {
+        return {
+          ready: action.isMicrophoneReady
+        };
       } else {
         return state;
       }

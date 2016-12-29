@@ -12,26 +12,34 @@ export class MicrophoneService {
 
   constructor(
     private speechService: WatsonSpeechToTextWebSocketService,
-  ) { }
+  ) {
+    this.speechService.socketState$
+      .subscribe(eventType => {
+        if (eventType === 'error' || eventType === 'close') {
+          this.stop();
+        }
+      });
+  }
 
 
-  get ws(): WebSocket {
+  get ws(): WebSocket | null {
     return this.speechService.getWebSocketInstance();
   }
 
 
   record() {
+    this.stop();
+
     this.speechService.webSocketStart()
       .then(() => {
         const micOptions = {
           bufferSize: 8192 // ctx.buffersize
         };
         if (!this.running) {
+          console.log('Starting microphone');
           this.mic = new Microphone(micOptions);
-          console.log('Not running, handleMicrophone()');
-          console.log('starting mic');
           this.mic.onAudio = (blob: Blob) => {
-            if (this.ws.readyState < 2) {
+            if (this.ws && this.ws.readyState < 2) {
               this.ws.send(blob);
             }
           };
@@ -46,9 +54,11 @@ export class MicrophoneService {
 
   stop() {
     this.speechService.webSocketStop();
-    console.log('Stopping microphone, sending stop action message');
-    this.mic.onAudio = () => { };
-    this.mic.stop();
+    if (this.mic) {
+      console.log('Stopping microphone, sending stop action message');
+      this.mic.onAudio = () => { };
+      this.mic.stop();
+    }
     this.running = false;
   }
 

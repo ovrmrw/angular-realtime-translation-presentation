@@ -3,8 +3,15 @@
   left: 0px;
   top: 0px;
   white-space: nowrap;
-  font-size: 50pt;
-  font-weight: 600;
+  font-size: 40pt;
+  font-weight: 500;
   color: springgreen;
-  text-shadow: 2px 2px 5px black;
+  text-shadow: 3px 3px 2px black;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none; 
+  -ms-user-select: none;
 }

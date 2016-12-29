@@ -1,0 +1,30 @@
+/* http://www.will-hp.com/wpblog/web/72/ */
+
+.blinking {
+    -webkit-animation:blink 0.8s ease-in-out infinite alternate;
+    -moz-animation:blink 0.8s ease-in-out infinite alternate;
+    animation:blink 0.8s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink{
+    0% {opacity:0.2;}
+    100% {opacity:1;}
+}
+
+@-moz-keyframes blink{
+    0% {opacity:0.2;}
+    100% {opacity:1;}
+}
+
+@keyframes blink{
+    0% {opacity:0.2;}
+    100% {opacity:1;}
+}
+
+
+.font-active {
+  font-size: 14pt;
+  font-weight: 600;
+  color: white;
+  background-color: blueviolet;  
+}
