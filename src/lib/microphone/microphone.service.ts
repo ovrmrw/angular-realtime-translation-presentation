@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
-import { SimpleStore } from '../simple-store';
+import { SimpleStore, contains } from '../simple-store';
 import { AppState } from '../../state';
 
 
@@ -12,6 +12,8 @@ const micOptions = {
 };
 
 const MICROPHONE_STATE = 'microphoneState';
+const SOCKET_STATE = 'socketState';
+const _keyValidation: (keyof AppState)[] = [MICROPHONE_STATE, SOCKET_STATE];
 
 
 @Injectable()
@@ -25,6 +27,7 @@ export class MicrophoneService {
     private simpleStore: SimpleStore<AppState>,
   ) {
     this.simpleStore.getState()
+      .filter(state => contains(state, [SOCKET_STATE]))
       .subscribe(state => {
         if (this.running && (state.socketState === 'error' || state.socketState === 'close')) {
           this.stop();

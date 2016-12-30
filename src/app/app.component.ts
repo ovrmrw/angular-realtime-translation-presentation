@@ -12,14 +12,15 @@ import { WatsonSpeechToTextService } from '../lib/watson';
     <app-slide></app-slide>
     <app-microphone></app-microphone>
     <app-meteor-tower></app-meteor-tower>
+    <app-flash></app-flash>
   `,
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends Disposer implements OnInit, OnDestroy {
-  recognized;
-  transcriptList: string[];
-  translatedList: string[];
+  // recognized;
+  // transcriptList: string[];
+  // translatedList: string[];
 
 
   constructor(
@@ -31,13 +32,13 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.disposable = this.simpleStore.getState()
-      .subscribe(state => {
-        this.recognized = state.recognized;
-        this.transcriptList = state.transcriptList;
-        this.translatedList = state.translatedList;
-        this.cd.markForCheck();
-      });
+    // this.disposable = this.simpleStore.getState()
+    //   .subscribe(state => {
+    //     this.recognized = state.recognized;
+    //     this.transcriptList = state.transcriptList;
+    //     this.translatedList = state.translatedList;
+    //     this.cd.markForCheck();
+    //   });
   }
 
 

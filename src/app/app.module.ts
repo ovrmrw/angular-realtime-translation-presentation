@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { MicrophoneComponent } from './microphone';
 import { SlideComponent } from './slide.component';
 import { MeteorTowerComponent, MeteorComponent } from './meteor';
+import { FlashComponent } from './flash';
 
 import { LibModule } from '../lib/lib.module';
 import { QueueConcurrent, InitialState } from '../lib/simple-store';
@@ -20,6 +21,7 @@ import { initialState } from '../state';
     SlideComponent,
     MeteorComponent,
     MeteorTowerComponent,
+    FlashComponent,
   ],
   imports: [
     BrowserModule,

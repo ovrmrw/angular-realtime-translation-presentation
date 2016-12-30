@@ -1,9 +1,13 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SimpleStore } from '../../lib/simple-store';
+import { SimpleStore, contains } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { Disposer } from '../../lib/class';
+
+const TRANSCRIPT_LIST = 'transcriptList';
+const TRANSLATED_LIST = 'translatedList';
+const _keyValidation: (keyof AppState)[] = [TRANSCRIPT_LIST, TRANSLATED_LIST];
 
 
 @Component({
@@ -53,19 +57,21 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
     this.disposable = this.simpleStore.getState()
+      .filter(state => contains(state, [TRANSCRIPT_LIST, TRANSLATED_LIST]))
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);
+        // const top: number = this.getTopPosition2(previousTop, 60);
 
         if (state.transcriptList.length > this.transcriptIndex) {
-          this.meteors.push({ text: state.transcript, top, timestamp, color: 'white' });
+          this.meteors.push({ text: state.transcript, top, timestamp, color: 'lightgray' });
           this.transcriptIndex = state.transcriptList.length;
         } else if (state.translatedList.length > this.translatedIndex) {
           this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' });
           this.translatedIndex = state.translatedList.length;
         }
         return top;
-      }, 9999)
+      }, 0)
       .subscribe(() => {
         this.cd.markForCheck();
 
@@ -93,6 +99,15 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
       top = (this.screenHeight - 100) * Math.random(); // 高さをランダムに決定。
     } while (Math.abs(top - previousTop) < (this.screenHeight / 10)); // 前回と縦10分割位以上の差がつくこと。
     return top;
+  }
+
+
+  getTopPosition2(previousTop: number, diff: number): number {
+    if (previousTop + diff > this.screenHeight - 100) {
+      return 0;
+    } else {
+      return previousTop + diff;
+    }
   }
 
 }

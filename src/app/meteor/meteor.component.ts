@@ -29,13 +29,11 @@ export class MeteorComponent implements OnInit {
   @Input() top: number;
   @Input() index: number;
   @Input() color: string;
-  // screenWidth: number;
   startPosition: number;
   opacity: number = 1;
 
 
   ngOnInit() {
-    // this.screenWidth = window.innerWidth;
     this.startPosition = window.innerWidth - (window.innerWidth / 5);
   }
 

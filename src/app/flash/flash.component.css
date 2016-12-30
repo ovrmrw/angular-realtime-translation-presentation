@@ -1,0 +1,9 @@
+.flash {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  font-size: 26pt;
+  color: darkgray;
+  text-shadow: 2px 2px 2px black;
+  white-space: nowrap;
+}
