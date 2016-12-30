@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SimpleStore, contains } from '../../lib/simple-store';
+import { SimpleStore, updatedProperty } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { Disposer } from '../../lib/class';
 
@@ -57,7 +57,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
     this.disposable = this.simpleStore.getState()
-      .filter(state => contains(state, [TRANSCRIPT_LIST, TRANSLATED_LIST]))
+      .filter(updatedProperty(TRANSCRIPT_LIST, TRANSLATED_LIST).bind(this))
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);

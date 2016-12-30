@@ -4,7 +4,7 @@ import * as lodash from 'lodash';
 
 import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
-import { SimpleStore, contains } from '../simple-store';
+import { SimpleStore, updatedProperty } from '../simple-store';
 import { AppState, RecognizedObject } from '../../state';
 
 
@@ -47,7 +47,7 @@ export class WatsonSpeechToTextWebSocketService {
     private translateService: GcpTranslatorService,
   ) {
     this.simpleStore.getState()
-      .filter(state => contains(state, [SOCKET_STATE]))
+      .filter(updatedProperty(SOCKET_STATE).bind(this))
       .subscribe(state => {
         console.log('socket state:', state.socketState);
       });

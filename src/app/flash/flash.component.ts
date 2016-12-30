@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore, contains } from '../../lib/simple-store';
+import { SimpleStore, updatedProperty } from '../../lib/simple-store';
 import { AppState } from '../../state';
 
 const RECOGNIZED = 'recognized';
@@ -31,7 +31,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.disposable = this.simpleStore.getState()
-      .filter(state => contains(state, [RECOGNIZED]))
+      .filter(updatedProperty(RECOGNIZED).bind(this))
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
           this.text = state.recognized.results[0].alternatives[0].transcript;
