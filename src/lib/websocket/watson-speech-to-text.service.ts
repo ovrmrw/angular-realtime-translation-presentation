@@ -4,11 +4,8 @@ import * as lodash from 'lodash';
 
 import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
-import {
-  Store, Dispatcher, Action, RecognizedObject,
-  RecognizedDataAction, PushTranscriptAction, PushTranslatedAction
-} from '../store';
-import { SimpleStore, AppState } from '../simple-store';
+import { SimpleStore } from '../simple-store';
+import { AppState, RecognizedObject } from '../../state';
 
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
@@ -30,23 +27,28 @@ const stopOptions = {
   'action': 'stop'
 };
 
+const RECOGNIZED = 'recognized';
+const TRANSCRIPT = 'transcript';
+const TRANSCRIPT_LIST = 'transcriptList';
+const TRANSLATED = 'translated';
+const TRANSLATED_LIST = 'translatedList';
+const SOCKET_STATE = 'socketState';
+
 
 @Injectable()
 export class WatsonSpeechToTextWebSocketService {
   private ws: WebSocket | null = null;
-  socketState$ = new Subject<string>();
 
 
   constructor(
-    private dispatcher$: Dispatcher<Action>,
-    // private store: Store,
     private simpleStore: SimpleStore<AppState>,
     private recognizeService: WatsonSpeechToTextService,
     private translateService: GcpTranslatorService,
   ) {
-    this.socketState$
+    this.simpleStore.getState()
+      .filter(state => state._last === SOCKET_STATE)
       .subscribe(state => {
-        console.log('socket state:', state);
+        console.log('socket state:', state.socketState);
       });
   }
 
@@ -78,27 +80,20 @@ export class WatsonSpeechToTextWebSocketService {
                 }
 
                 if (data && data.results) {
-                  // this.dispatcher$.next(new RecognizedDataAction(data));
-                  this.simpleStore.setState('recognized', (p) => data.state ? p : data);
+                  this.simpleStore.setState(RECOGNIZED, (p) => data.state ? p : data);
 
                   if (data.results[0].final) { // 認識が完了しているかどうか。
                     const transcript = data.results[0].alternatives[0].transcript;
-                    // this.dispatcher$.next(new PushTranscriptAction(transcript));
                     this.simpleStore
-                      .setState('transcript', transcript)
+                      .setState(TRANSCRIPT, transcript)
                       .then(state => {
-                        this.simpleStore.setState('transcriptList', (p) => [...p, state.transcript]);
+                        this.simpleStore.setState(TRANSCRIPT_LIST, (p) => [...p, state.transcript]);
                       });
 
-                    // this.dispatcher$.next(
-                    //   // this.translateService.requestTranslate(transcript)
-                    //   //   .then(translated => new PushTranslatedAction(translated))
-                    //   Observable.of(new PushTranslatedAction('(TRANSLATED)' + transcript)).delay(500)
-                    // );
                     this.simpleStore
-                      .setState('translated', this.translateService.requestTranslate(transcript))
+                      .setState(TRANSLATED, this.translateService.requestTranslate(transcript))
                       .then(state => {
-                        this.simpleStore.setState('translatedList', (p) => [...p, state.translated]);
+                        this.simpleStore.setState(TRANSLATED_LIST, (p) => [...p, state.translated]);
                       });
                   }
                 }
@@ -106,9 +101,8 @@ export class WatsonSpeechToTextWebSocketService {
 
               this.ws.onerror = (event) => {
                 console.error('ws.onerror', event);
-                // this.dispatcher$.next(new MicrophoneActiveAction(false));                
                 reject();
-                this.socketState$.next(event.type);
+                this.simpleStore.setState(SOCKET_STATE, event.type);
               };
 
               this.ws.onopen = (event) => {
@@ -117,15 +111,13 @@ export class WatsonSpeechToTextWebSocketService {
                   this.ws.send(JSON.stringify(startOptions));
                   console.log('{ action: "start" } is sent.');
                 }
-                // this.dispatcher$.next(new MicrophoneActiveAction(true));                
                 resolve();
-                this.socketState$.next(event.type);
+                this.simpleStore.setState(SOCKET_STATE, event.type);
               };
 
               this.ws.onclose = (event) => {
                 console.log('ws.onclose', event);
-                // this.dispatcher$.next(new MicrophoneActiveAction(false));
-                this.socketState$.next(event.type);
+                this.simpleStore.setState(SOCKET_STATE, event.type);
               };
             }
           });

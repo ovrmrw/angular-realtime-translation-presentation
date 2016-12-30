@@ -1,3 +1,3 @@
 export { SimpleStore } from './simple-store'
-export { AppState } from './state'
+export { QueueConcurrent, InitialState } from './common'
 export * from './simple-store.module'

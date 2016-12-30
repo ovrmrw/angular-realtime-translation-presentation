@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Store } from '../../lib/store';
-import { SimpleStore, AppState } from '../../lib/simple-store';
+import { SimpleStore } from '../../lib/simple-store';
+import { AppState } from '../../state';
+import { Disposer } from '../../lib/class';
 
 
 @Component({
@@ -13,19 +14,19 @@ import { SimpleStore, AppState } from '../../lib/simple-store';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MeteorTowerComponent implements OnInit {
+export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy {
   meteors: Meteor[] = [];
   screenHeight: number = window.innerHeight;
   transcriptIndex: number = 0;
   translatedIndex: number = 0;
-  // previousTop: number = 9999;
 
 
   constructor(
-    // private store: Store,
     private simpleStore: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
-  ) { }
+  ) {
+    super();
+  }
 
 
   ngOnInit() {
@@ -51,23 +52,7 @@ export class MeteorTowerComponent implements OnInit {
       });
 
 
-    // this.store.getState()
-    //   .scan((previousTop, state) => {
-    //     const timestamp: number = new Date().getTime();
-    //     const top: number = this.getTopPosition(previousTop);
-
-    //     if (state.transcriptList.length > this.transcriptIndex) {
-    //       this.meteors.push({ text: state.transcript, top, timestamp });
-    //       this.transcriptIndex = state.transcriptList.length;
-    //     } else if (state.translatedList.length > this.translatedIndex) {
-    //       this.meteors.push({ text: state.translated, top, timestamp });
-    //       this.translatedIndex = state.translatedList.length;
-    //     }
-    //     return top;
-    //   }, 9999)
-    //   .subscribe(() => this.cd.markForCheck());
-
-    this.simpleStore.getState()
+    this.disposable = this.simpleStore.getState()
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);
@@ -94,6 +79,11 @@ export class MeteorTowerComponent implements OnInit {
       .subscribe(event => {
         this.screenHeight = window.innerHeight;
       });
+  }
+
+
+  ngOnDestroy() {
+    this.disposeSubscriptions();
   }
 
 

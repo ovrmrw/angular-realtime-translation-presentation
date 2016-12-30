@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
-import { Store } from '../lib/store';
-import { SimpleStore, AppState } from '../lib/simple-store';
+import { SimpleStore } from '../lib/simple-store';
+import { AppState } from '../state';
 import { Disposer } from '../lib/class';
 import { WatsonSpeechToTextService } from '../lib/watson';
 
@@ -10,14 +10,7 @@ import { WatsonSpeechToTextService } from '../lib/watson';
   selector: 'app-root',
   template: `
     <app-slide></app-slide>
-    <app-microphone></app-microphone>    
-    <ul>
-      <li *ngFor="let transcript of transcriptList">{{transcript}}</li>
-    </ul>
-    <ul>
-      <li *ngFor="let translated of translatedList">{{translated}}</li>
-    </ul>
-    <pre>{{recognized | json}}</pre>
+    <app-microphone></app-microphone>
     <app-meteor-tower></app-meteor-tower>
   `,
   styleUrls: ['./app.component.css'],
@@ -30,23 +23,14 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
 
 
   constructor(
-    // private store: Store,
     private simpleStore: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
-    // private wsttService: WatsonSpeechToTextService,
   ) {
     super();
   }
 
 
   ngOnInit() {
-    // this.disposable = this.store.getState().subscribe(state => {
-    //   this.recognized = state.recognized;
-    //   this.transcriptList = state.transcriptList;
-    //   this.translatedList = state.translatedList;
-    //   this.cd.markForCheck();
-    // });
-
     this.disposable = this.simpleStore.getState()
       .subscribe(state => {
         this.recognized = state.recognized;

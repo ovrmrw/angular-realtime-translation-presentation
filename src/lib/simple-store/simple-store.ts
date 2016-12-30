@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Inject } from '@angular/core';
+import { Injectable, NgZone, Inject, Optional } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
 import { QueueConcurrent, InitialState, Action, ValueTypes } from './common';
@@ -14,11 +14,16 @@ export class SimpleStore<T> {
     private zone: NgZone,
     @Inject(InitialState)
     private initialState: T,
-    @Inject(QueueConcurrent)
-    private concurrent: number,
+    @Inject(QueueConcurrent) @Optional()
+    private concurrent: number | null,
   ) {
     this.provider$ = new BehaviorSubject<T>(initialState);
+    this.createStore();
+    this.applyEffectors();
+  }
 
+
+  private createStore(): void {
     const queue =
       this.simpleStore$
         .mergeMap(action => {
@@ -37,22 +42,34 @@ export class SimpleStore<T> {
         } else {
           state[action.key] = action.value;
         }
+        state['_last'] = action.key;
         const newState = Object.assign({}, state);
         setTimeout(() => {
           action.subject.next(newState);
         }, 0);
         return newState;
-      }, initialState)
+      }, this.initialState)
       .subscribe(newState => {
         console.log('newState:', newState);
         this.zone.run(() => {
           this.provider$.next(newState);
         });
+        this.effectAfterReduced(newState);
       });
   }
 
 
-  setState<K extends keyof T>(key: K, value: ValueTypes<K, T>): Promise<T> {
+  private effectAfterReduced(state: T): void {
+
+  }
+
+
+  private applyEffectors(): void {
+
+  }
+
+
+  setState<K extends keyof T>(key: K, value: ValueTypes<T, K>): Promise<T> {
     const subject = new Subject<T>();
     this.simpleStore$.next({ key, value, subject });
     return subject.take(1).toPromise();

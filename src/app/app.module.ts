@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-
-import { LibModule } from '../lib/lib.module';
 import { MicrophoneComponent } from './microphone';
 import { SlideComponent } from './slide.component';
 import { MeteorTowerComponent, MeteorComponent } from './meteor';
-// import { MeteorTowerComponent } from './meteor/meteor-tower.component';
+
+import { LibModule } from '../lib/lib.module';
+import { QueueConcurrent, InitialState } from '../lib/simple-store';
+import { initialState } from '../state';
 
 
 @NgModule({
@@ -26,7 +27,10 @@ import { MeteorTowerComponent, MeteorComponent } from './meteor';
     HttpModule,
     LibModule,
   ],
-  providers: [],
+  providers: [
+    { provide: QueueConcurrent, useValue: 99 },
+    { provide: InitialState, useValue: initialState },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

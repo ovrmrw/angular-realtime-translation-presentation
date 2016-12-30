@@ -24,6 +24,8 @@ export const initialState: AppState = {
   },
   recognizeModel: 'en',
   translateTo: 'jp',
+  socketState: '',
+  _last: '',
 };
 
 
@@ -42,6 +44,8 @@ export type AppState = {
   microphoneState: MicrophoneState;
   recognizeModel: string;
   translateTo: string;
+  socketState: string;
+  _last: string;
 };
 
 
