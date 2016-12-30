@@ -4,11 +4,13 @@ import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
 import { Dispatcher, Action, MicrophoneActiveAction } from '../store';
-
+import { SimpleStore,AppState } from '../simple-store';
 
 const micOptions = {
   bufferSize: 8192 // ctx.buffersize
 };
+
+const MICROPHONE_STATE = 'microphoneState';
 
 
 @Injectable()
@@ -19,7 +21,8 @@ export class MicrophoneService {
 
   constructor(
     private recognizeService: WatsonSpeechToTextWebSocketService,
-    private dispatcher$: Dispatcher<Action>,
+    // private dispatcher$: Dispatcher<Action>,
+    private simpleStore: SimpleStore<AppState>,
   ) {
     this.recognizeService.socketState$
       .subscribe(eventType => {
@@ -51,7 +54,8 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
-          this.dispatcher$.next(new MicrophoneActiveAction(this.running));
+          // this.dispatcher$.next(new MicrophoneActiveAction(this.running));
+          this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running });
         } else {
           console.log('recording is already running.');
         }
@@ -68,7 +72,8 @@ export class MicrophoneService {
       this.mic = null;
     }
     this.running = false;
-    this.dispatcher$.next(new MicrophoneActiveAction(this.running));
+    // this.dispatcher$.next(new MicrophoneActiveAction(this.running));
+    this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running });
   }
 
 }

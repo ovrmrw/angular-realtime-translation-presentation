@@ -1,31 +1,34 @@
 import { Injectable, NgZone, Inject } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 
-import { QueueConcurrent, Action, ValueTypes } from './common';
-import { AppState, initialState } from './state';
+import { QueueConcurrent, InitialState, Action, ValueTypes } from './common';
 
 
 @Injectable()
-export class SimpleStore {
+export class SimpleStore<T> {
   private simpleStore$ = new Subject<Action>();
-  private provider$ = new BehaviorSubject<AppState>(initialState);
+  private provider$: BehaviorSubject<T>;
 
 
   constructor(
     private zone: NgZone,
+    @Inject(InitialState)
+    private initialState: T,
     @Inject(QueueConcurrent)
     private concurrent: number,
   ) {
+    this.provider$ = new BehaviorSubject<T>(initialState);
+
     const queue =
       this.simpleStore$
         .mergeMap(action => {
           if (action.value instanceof Promise || action.value instanceof Observable) {
-            return Observable.from(action.value).mergeMap(value => Observable.of({ key: action.key, value }));
+            return Observable.from(action.value)
+              .mergeMap(value => Observable.of(Object.assign(action, { value })));
           } else {
             return Observable.of(action);
           }
         }, (this.concurrent || 1));
-
 
     queue
       .scan((state, action) => {
@@ -34,7 +37,11 @@ export class SimpleStore {
         } else {
           state[action.key] = action.value;
         }
-        return Object.assign({}, state);
+        const newState = Object.assign({}, state);
+        setTimeout(() => {
+          action.subject.next(newState);
+        }, 0);
+        return newState;
       }, initialState)
       .subscribe(newState => {
         console.log('newState:', newState);
@@ -45,12 +52,14 @@ export class SimpleStore {
   }
 
 
-  setState<K extends keyof AppState>(key: K, value: ValueTypes<K, AppState>): void {
-    this.simpleStore$.next({ key, value });
+  setState<K extends keyof T>(key: K, value: ValueTypes<K, T>): Promise<T> {
+    const subject = new Subject<T>();
+    this.simpleStore$.next({ key, value, subject });
+    return subject.take(1).toPromise();
   }
 
 
-  getState(): Observable<AppState> {
+  getState(): Observable<T> {
     return this.provider$;
   }
 

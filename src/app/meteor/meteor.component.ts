@@ -8,7 +8,7 @@ import { trigger, state, style, animate, transition } from '@angular/core';
     <div class="meteor no-select" 
       (click)="onClick()"
       [@flyInOut]="true" 
-      [style.left.px]="startPosition" [style.top.px]="top" [style.zIndex]="index"
+      [style.left.px]="startPosition" [style.top.px]="top" [style.color]="color" [style.zIndex]="index"
       [style.opacity]="opacity">{{text}}
     </div>
   `,
@@ -28,6 +28,7 @@ export class MeteorComponent implements OnInit {
   @Input() text: string;
   @Input() top: number;
   @Input() index: number;
+  @Input() color: string;
   // screenWidth: number;
   startPosition: number;
   opacity: number = 1;

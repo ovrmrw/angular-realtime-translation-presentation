@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@
 import { MicrophoneService } from '../../lib/microphone';
 
 import { Store } from '../../lib/store';
+import { SimpleStore, AppState } from '../../lib/simple-store';
 
 
 @Component({
@@ -20,13 +21,20 @@ export class MicrophoneComponent implements OnInit {
 
   constructor(
     private microphoneService: MicrophoneService,
-    private store: Store,
+    // private store: Store,
+    private simpleStore: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) { }
 
 
   ngOnInit() {
-    this.store.getState()
+    // this.store.getState()
+    //   .subscribe(state => {
+    //     this.isActive = state.microphoneState.isActive;
+    //     this.cd.markForCheck();
+    //   });
+
+    this.simpleStore.getState()
       .subscribe(state => {
         this.isActive = state.microphoneState.isActive;
         this.cd.markForCheck();

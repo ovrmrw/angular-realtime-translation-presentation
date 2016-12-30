@@ -2,12 +2,13 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@
 import { Observable } from 'rxjs';
 
 import { Store } from '../../lib/store';
+import { SimpleStore, AppState } from '../../lib/simple-store';
 
 
 @Component({
   selector: 'app-meteor-tower',
   template: `
-    <app-meteor *ngFor="let m of meteors; let i = index" [text]="m.text" [top]="m.top" [index]="i">
+    <app-meteor *ngFor="let m of meteors; let i = index" [text]="m.text" [top]="m.top" [color]="m.color" [index]="i">
     </app-meteor>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,10 +18,12 @@ export class MeteorTowerComponent implements OnInit {
   screenHeight: number = window.innerHeight;
   transcriptIndex: number = 0;
   translatedIndex: number = 0;
-  previousTop: number = 9999;
+  // previousTop: number = 9999;
+
 
   constructor(
-    private store: Store,
+    // private store: Store,
+    private simpleStore: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) { }
 
@@ -40,7 +43,7 @@ export class MeteorTowerComponent implements OnInit {
         previousTop = top;
 
         const timestamp = new Date().getTime();
-        this.meteors.push({ text, top, timestamp });
+        this.meteors.push({ text, top, timestamp, color: 'white' });
         this.cd.markForCheck();
 
         /* filtering array */
@@ -48,21 +51,43 @@ export class MeteorTowerComponent implements OnInit {
       });
 
 
-    this.store.getState()
+    // this.store.getState()
+    //   .scan((previousTop, state) => {
+    //     const timestamp: number = new Date().getTime();
+    //     const top: number = this.getTopPosition(previousTop);
+
+    //     if (state.transcriptList.length > this.transcriptIndex) {
+    //       this.meteors.push({ text: state.transcript, top, timestamp });
+    //       this.transcriptIndex = state.transcriptList.length;
+    //     } else if (state.translatedList.length > this.translatedIndex) {
+    //       this.meteors.push({ text: state.translated, top, timestamp });
+    //       this.translatedIndex = state.translatedList.length;
+    //     }
+    //     return top;
+    //   }, 9999)
+    //   .subscribe(() => this.cd.markForCheck());
+
+    this.simpleStore.getState()
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);
 
         if (state.transcriptList.length > this.transcriptIndex) {
-          this.meteors.push({ text: state.transcript, top, timestamp });
+          this.meteors.push({ text: state.transcript, top, timestamp, color: 'white' });
           this.transcriptIndex = state.transcriptList.length;
         } else if (state.translatedList.length > this.translatedIndex) {
-          this.meteors.push({ text: state.translated, top, timestamp });
+          this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' });
           this.translatedIndex = state.translatedList.length;
         }
         return top;
       }, 9999)
-      .subscribe(() => this.cd.markForCheck());
+      .subscribe(() => {
+        this.cd.markForCheck();
+
+        /* filtering array */
+        const now = new Date().getTime();
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 15); // 15秒後に削除する。
+      });
 
 
     Observable.fromEvent<Event>(window, 'resize')
@@ -87,4 +112,5 @@ interface Meteor {
   text: string;
   top: number;
   timestamp: number;
+  color: string;
 }

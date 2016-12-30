@@ -8,6 +8,7 @@ import {
   Store, Dispatcher, Action, RecognizedObject,
   RecognizedDataAction, PushTranscriptAction, PushTranslatedAction
 } from '../store';
+import { SimpleStore, AppState } from '../simple-store';
 
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
@@ -20,7 +21,7 @@ const startOptions = {
   'word_confidence': true,
   'timestamps': true,
   // 'max_alternatives': 3,
-  'inactivity_timeout': 2, // 30,
+  'inactivity_timeout': 5, // 30,
   // 'word_alternatives_threshold': 0.001,
   'smart_formatting': true,
 };
@@ -38,7 +39,8 @@ export class WatsonSpeechToTextWebSocketService {
 
   constructor(
     private dispatcher$: Dispatcher<Action>,
-    private store: Store,
+    // private store: Store,
+    private simpleStore: SimpleStore<AppState>,
     private recognizeService: WatsonSpeechToTextService,
     private translateService: GcpTranslatorService,
   ) {
@@ -58,7 +60,7 @@ export class WatsonSpeechToTextWebSocketService {
     return new Promise<void>((resolve, reject) => {
       this.recognizeService.requestToken()
         .then(token => {
-          this.store.getState().take(1).subscribe(state => {
+          this.simpleStore.getState().take(1).subscribe(state => {
             const model = state.speechToText.currentModel;
 
             if (!this.ws && token && model) {
@@ -76,16 +78,28 @@ export class WatsonSpeechToTextWebSocketService {
                 }
 
                 if (data && data.results) {
-                  this.dispatcher$.next(new RecognizedDataAction(data));
+                  // this.dispatcher$.next(new RecognizedDataAction(data));
+                  this.simpleStore.setState('recognized', (p) => data.state ? p : data);
 
                   if (data.results[0].final) { // 認識が完了しているかどうか。
                     const transcript = data.results[0].alternatives[0].transcript;
-                    this.dispatcher$.next(new PushTranscriptAction(transcript));
-                    this.dispatcher$.next(
-                      // this.translateService.requestTranslate(transcript)
-                      //   .then(translated => new PushTranslatedAction(translated))
-                      Observable.of(new PushTranslatedAction('(TRANSLATED)' + transcript)).delay(500)
-                    );
+                    // this.dispatcher$.next(new PushTranscriptAction(transcript));
+                    this.simpleStore
+                      .setState('transcript', transcript)
+                      .then(state => {
+                        this.simpleStore.setState('transcriptList', (p) => [...p, state.transcript]);
+                      });
+
+                    // this.dispatcher$.next(
+                    //   // this.translateService.requestTranslate(transcript)
+                    //   //   .then(translated => new PushTranslatedAction(translated))
+                    //   Observable.of(new PushTranslatedAction('(TRANSLATED)' + transcript)).delay(500)
+                    // );
+                    this.simpleStore
+                      .setState('translated', this.translateService.requestTranslate(transcript))
+                      .then(state => {
+                        this.simpleStore.setState('translatedList', (p) => [...p, state.translated]);
+                      });
                   }
                 }
               };

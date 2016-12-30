@@ -1,18 +1,21 @@
 import { OpaqueToken } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 
 export const QueueConcurrent = new OpaqueToken('QueueConcurrent');
+
+export const InitialState = new OpaqueToken('InitialState');
 
 
 export type Action = {
   key: string;
   value: any;
+  subject: Subject<any>;
 };
 
 
-type Val<K extends keyof T, T> = T[K];
+type Value<K extends keyof T, T> = T[K];
 type Func<K extends keyof T, T> = (value: T[K]) => T[K];
 
 export type ValueTypes<K extends keyof T, T> =
-  Val<K, T> | Func<K, T> | Promise<Val<K, T>> | Promise<Func<K, T>> | Observable<Val<K, T>> | Observable<Func<K, T>>;
+  Value<K, T> | Func<K, T> | Promise<Value<K, T>> | Promise<Func<K, T>> | Observable<Value<K, T>> | Observable<Func<K, T>>;
