@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { Disposer } from '../../lib/class';
 import { SimpleStore, contains } from '../../lib/simple-store';
 import { AppState } from '../../state';
 
@@ -16,18 +17,20 @@ const _keyValidation: (keyof AppState)[] = [RECOGNIZED];
   styleUrls: ['./flash.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlashComponent implements OnInit {
+export class FlashComponent extends Disposer implements OnInit, OnDestroy {
   text: string = '';
 
 
   constructor(
     private simpleStore: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
-  ) { }
+  ) {
+    super();
+  }
 
 
   ngOnInit() {
-    this.simpleStore.getState()
+    this.disposable = this.simpleStore.getState()
       .filter(state => contains(state, [RECOGNIZED]))
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
@@ -37,6 +40,11 @@ export class FlashComponent implements OnInit {
         }
         this.cd.markForCheck();
       });
+  }
+
+
+  ngOnDestroy() {
+    this.disposeSubscriptions();
   }
 
 }
