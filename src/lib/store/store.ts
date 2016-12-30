@@ -37,8 +37,10 @@ const initialState: AppState = {
   },
   recognized: null,
   microphoneState: {
-    ready: false
-  }
+    isActive: false
+  },
+  recognizeModel: 'en',
+  translateTo: 'jp',
 };
 
 

@@ -5,6 +5,7 @@ import { StoreModule } from './store';
 import { MicrophoneModule } from './microphone';
 import { WatsonModule } from './watson';
 import { GcpModule } from './gcp';
+import { SimpleStoreModule } from './simple-store';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { GcpModule } from './gcp';
     MicrophoneModule,
     WatsonModule,
     GcpModule,
+    SimpleStoreModule,
   ]
 })
 export class LibModule { }

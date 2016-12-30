@@ -6,8 +6,9 @@ import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
 import {
   Store, Dispatcher, Action, RecognizedObject,
-  RecognizedDataAction, PushTranscriptAction, PushTranslatedAction, MicStateAction
+  RecognizedDataAction, PushTranscriptAction, PushTranslatedAction
 } from '../store';
+
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
 
@@ -19,7 +20,7 @@ const startOptions = {
   'word_confidence': true,
   'timestamps': true,
   // 'max_alternatives': 3,
-  'inactivity_timeout': 5, // 30,
+  'inactivity_timeout': 2, // 30,
   // 'word_alternatives_threshold': 0.001,
   'smart_formatting': true,
 };
@@ -32,8 +33,6 @@ const stopOptions = {
 @Injectable()
 export class WatsonSpeechToTextWebSocketService {
   private ws: WebSocket | null = null;
-  // private connectedToken: string;
-  // private _cachedData: RecognizedObject;
   socketState$ = new Subject<string>();
 
 
@@ -42,7 +41,12 @@ export class WatsonSpeechToTextWebSocketService {
     private store: Store,
     private recognizeService: WatsonSpeechToTextService,
     private translateService: GcpTranslatorService,
-  ) { }
+  ) {
+    this.socketState$
+      .subscribe(state => {
+        console.log('socket state:', state);
+      });
+  }
 
 
   private createUrl(token: string, model: string): string {
@@ -77,19 +81,20 @@ export class WatsonSpeechToTextWebSocketService {
                   if (data.results[0].final) { // 認識が完了しているかどうか。
                     const transcript = data.results[0].alternatives[0].transcript;
                     this.dispatcher$.next(new PushTranscriptAction(transcript));
-                    // this.dispatcher$.next(
-                    //   this.translateService.requestTranslate(transcript)
-                    //     .then(translated => new PushTranslatedAction(translated))
-                    // );
+                    this.dispatcher$.next(
+                      // this.translateService.requestTranslate(transcript)
+                      //   .then(translated => new PushTranslatedAction(translated))
+                      Observable.of(new PushTranslatedAction('(TRANSLATED)' + transcript)).delay(500)
+                    );
                   }
                 }
               };
 
               this.ws.onerror = (event) => {
                 console.error('ws.onerror', event);
-                this.dispatcher$.next(new MicStateAction(false));
-                this.socketState$.next(event.type);
+                // this.dispatcher$.next(new MicrophoneActiveAction(false));                
                 reject();
+                this.socketState$.next(event.type);
               };
 
               this.ws.onopen = (event) => {
@@ -98,14 +103,14 @@ export class WatsonSpeechToTextWebSocketService {
                   this.ws.send(JSON.stringify(startOptions));
                   console.log('{ action: "start" } is sent.');
                 }
-                this.dispatcher$.next(new MicStateAction(true));
-                this.socketState$.next(event.type);
+                // this.dispatcher$.next(new MicrophoneActiveAction(true));                
                 resolve();
+                this.socketState$.next(event.type);
               };
 
               this.ws.onclose = (event) => {
                 console.log('ws.onclose', event);
-                this.dispatcher$.next(new MicStateAction(false));
+                // this.dispatcher$.next(new MicrophoneActiveAction(false));
                 this.socketState$.next(event.type);
               };
             }

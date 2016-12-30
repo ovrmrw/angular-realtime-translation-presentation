@@ -3,6 +3,13 @@ import { Injectable } from '@angular/core';
 import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
+import { Dispatcher, Action, MicrophoneActiveAction } from '../store';
+
+
+const micOptions = {
+  bufferSize: 8192 // ctx.buffersize
+};
+
 
 @Injectable()
 export class MicrophoneService {
@@ -11,9 +18,10 @@ export class MicrophoneService {
 
 
   constructor(
-    private speechService: WatsonSpeechToTextWebSocketService,
+    private recognizeService: WatsonSpeechToTextWebSocketService,
+    private dispatcher$: Dispatcher<Action>,
   ) {
-    this.speechService.socketState$
+    this.recognizeService.socketState$
       .subscribe(eventType => {
         if (eventType === 'error' || eventType === 'close') {
           this.stop();
@@ -23,18 +31,16 @@ export class MicrophoneService {
 
 
   get ws(): WebSocket | null {
-    return this.speechService.getWebSocketInstance();
+    return this.recognizeService.getWebSocketInstance();
   }
 
 
   record() {
     this.stop();
 
-    this.speechService.webSocketStart()
+    console.log('Starting WebSocket');
+    this.recognizeService.webSocketStart()
       .then(() => {
-        const micOptions = {
-          bufferSize: 8192 // ctx.buffersize
-        };
         if (!this.running) {
           console.log('Starting microphone');
           this.mic = new Microphone(micOptions);
@@ -45,6 +51,7 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
+          this.dispatcher$.next(new MicrophoneActiveAction(this.running));
         } else {
           console.log('recording is already running.');
         }
@@ -53,13 +60,15 @@ export class MicrophoneService {
 
 
   stop() {
-    this.speechService.webSocketStop();
+    console.log('Stopping microphone, sending stop action message');
+    this.recognizeService.webSocketStop();
     if (this.mic) {
-      console.log('Stopping microphone, sending stop action message');
       this.mic.onAudio = () => { };
       this.mic.stop();
+      this.mic = null;
     }
     this.running = false;
+    this.dispatcher$.next(new MicrophoneActiveAction(this.running));
   }
 
 }

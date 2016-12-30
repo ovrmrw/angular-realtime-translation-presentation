@@ -1,4 +1,33 @@
-export interface AppState {
+import * as uuid from 'uuid';
+
+
+export const initialState: AppState = {
+  transcripting: '',
+  transcript: '',
+  transcriptList: [],
+  translated: '',
+  translatedList: [],
+  content: '',
+  restore: false,
+  afterRestored: false,
+  uuid: uuid.v4(), // 起動毎にクライアントを識別するためのユニークなIDを生成する。
+  speechToText: {
+    bufferSize: 8192,
+    token: '',
+    currentModel: 'en-US_BroadbandModel',
+    sessionPermissions: true,
+    playbackON: false,
+  },
+  recognized: null,
+  microphoneState: {
+    isActive: false
+  },
+  recognizeModel: 'en',
+  translateTo: 'jp',
+};
+
+
+export type AppState = {
   transcripting: string;
   transcript: string;
   translated: string;
@@ -13,7 +42,7 @@ export interface AppState {
   microphoneState: MicrophoneState;
   recognizeModel: string;
   translateTo: string;
-}
+};
 
 
 export interface MicrophoneState {

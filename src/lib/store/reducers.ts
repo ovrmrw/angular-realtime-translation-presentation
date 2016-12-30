@@ -4,7 +4,7 @@ import {
   Action,
   UpdateContentAction, RestoreAction,
   RecognizedDataAction, TokenAction,
-  PushTranscriptAction, PushTranslatedAction, MicStateAction,
+  PushTranscriptAction, PushTranslatedAction, MicrophoneActiveAction,
 } from './actions';
 
 
@@ -124,14 +124,13 @@ export const translationStateReducer: StateReducer<WatsonSpeechToText> =
     }, initState);
 
 
-
 export const microphoneStateReducer: StateReducer<MicrophoneState> =
   (initState: MicrophoneState, dispatcher$: Dispatcher<Action>) =>
     dispatcher$.scan((state, action) => {
-      if (action instanceof MicStateAction) {
-        return {
-          ready: action.isMicrophoneReady
-        };
+      if (action instanceof MicrophoneActiveAction) {
+        return Object.assign(state, {
+          isActive: action.isActive
+        }) as MicrophoneState;
       } else {
         return state;
       }

@@ -9,17 +9,17 @@ import { Store } from '../../lib/store';
   template: `
     <button class="btn btn-primary" (click)="record()">Mic Record</button>
     <button class="btn btn-secondary" (click)="stop()">Mic Stop</button>
-    <span *ngIf="messageShow" class="blinking font-active">MIC IS ACTIVE</span>
+    <span *ngIf="isActive" class="blinking font-active">MIC IS ACTIVE</span>
 	`,
   styleUrls: ['./microphone.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MicrophoneComponent implements OnInit {
-  messageShow: boolean;
+  isActive: boolean;
 
 
   constructor(
-    private micService: MicrophoneService,
+    private microphoneService: MicrophoneService,
     private store: Store,
     private cd: ChangeDetectorRef,
   ) { }
@@ -28,19 +28,19 @@ export class MicrophoneComponent implements OnInit {
   ngOnInit() {
     this.store.getState()
       .subscribe(state => {
-        this.messageShow = state.microphoneState.ready ? true : false;
+        this.isActive = state.microphoneState.isActive;
         this.cd.markForCheck();
       });
   }
 
 
   record() {
-    this.micService.record();
+    this.microphoneService.record();
   }
 
 
   stop() {
-    this.micService.stop();
+    this.microphoneService.stop();
   }
 
 }

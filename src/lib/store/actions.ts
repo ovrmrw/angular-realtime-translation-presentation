@@ -26,15 +26,15 @@ export class PushTranslatedAction {
   constructor(public translated: string) { }
 }
 
-export class MicStateAction {
-  constructor(public isMicrophoneReady: boolean) { }
+export class MicrophoneActiveAction {
+  constructor(public isActive: boolean) { }
 }
 
 
 export type _Actions =
   UpdateContentAction | RestoreAction |
   RecognizedDataAction | TokenAction |
-  PushTranscriptAction | PushTranslatedAction | MicStateAction
+  PushTranscriptAction | PushTranslatedAction | MicrophoneActiveAction
   ;
 
 
