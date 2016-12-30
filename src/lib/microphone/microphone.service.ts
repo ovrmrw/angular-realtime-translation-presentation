@@ -4,7 +4,7 @@ import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
 import { SimpleStore, contains } from '../simple-store';
-import { AppState } from '../../state';
+import { AppState, MicrophoneState } from '../../state';
 
 
 const micOptions = {
@@ -57,7 +57,7 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
-          this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running });
+          this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running } as MicrophoneState);
         } else {
           console.log('recording is already running.');
         }
@@ -74,7 +74,7 @@ export class MicrophoneService {
       this.mic = null;
     }
     this.running = false;
-    this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running });
+    this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running } as MicrophoneState);
   }
 
 }
