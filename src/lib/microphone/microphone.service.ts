@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
-import { SimpleStore, updatedProperty } from '../simple-store';
+import { SimpleStore, isUpdatedKey } from '../simple-store';
 import { AppState, MicrophoneState } from '../../state';
-import { microphoneStateType, socketStateType } from '../../state';
+import { microphoneStateKey, socketStateKey } from '../../state';
 
 
 const micOptions = {
@@ -24,7 +24,7 @@ export class MicrophoneService {
     private store: SimpleStore<AppState>,
   ) {
     this.store.getState()
-      .filter(updatedProperty.bind([socketStateType]))
+      .filter(isUpdatedKey.bind([socketStateKey]))
       .subscribe(state => {
         if (this.running && (state.socketState === 'error' || state.socketState === 'close')) {
           this.stop();
@@ -54,7 +54,7 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
-          this.store.setState(microphoneStateType, { isActive: this.running } as MicrophoneState);
+          this.store.setState(microphoneStateKey, { isActive: this.running } as MicrophoneState);
         } else {
           console.log('recording is already running.');
         }
@@ -71,7 +71,7 @@ export class MicrophoneService {
       this.mic = null;
     }
     this.running = false;
-    this.store.setState(microphoneStateType, { isActive: this.running } as MicrophoneState);
+    this.store.setState(microphoneStateKey, { isActive: this.running } as MicrophoneState);
   }
 
 }

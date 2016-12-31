@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore, updatedProperty } from '../../lib/simple-store';
+import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
 import { AppState } from '../../state';
-import { transcriptListType, translatedListType, windowStateType } from '../../state';
+import { transcriptListKey, translatedListKey, windowStateKey } from '../../state';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
     this.disposable = this.store.getState()
-      .filter(updatedProperty.bind([windowStateType]))
+      .filter(isUpdatedKey.bind([windowStateKey]))
       .subscribe(state => {
         this.screenHeight = state.windowState.innerHeight;
       });
@@ -46,7 +46,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
     };
 
     this.disposable = this.store.getState()
-      .filter(updatedProperty.bind([transcriptListType, translatedListType]))
+      .filter(isUpdatedKey.bind([transcriptListKey, translatedListKey]))
       .scan((obj, state) => {
         const timestamp = new Date().getTime();
         const top = this.getTopPosition(obj.top);

@@ -13,8 +13,6 @@ export const initialState: AppState = {
   microphoneState: {
     isActive: false
   },
-  // recognizeModel: 'en-US_BroadbandModel',
-  // translateTo: 'ja',
   socketState: '',
   windowState: {
     innerWidth: 0,
@@ -38,8 +36,6 @@ export type AppState = {
   uuid: string;
   recognized: RecognizedObject | null;
   microphoneState: MicrophoneState;
-  // recognizeModel: string;
-  // translateTo: string;
   socketState: string;
   windowState: WindowState;
   translationConfig: TranslationConfig;
@@ -47,32 +43,28 @@ export type AppState = {
 
 
 /* Component, Serviceでimportして使う文字列。 */
-export const transcriptType = 'transcript';
-export const translatedType = 'translated';
-export const transcriptListType = 'transcriptList';
-export const translatedListType = 'translatedList';
-export const recognizedType = 'recognized';
-export const microphoneStateType = 'microphoneState';
-// export const recognizeModelType = 'recognizeModel';
-// export const translateToType = 'translateTo';
-export const socketStateType = 'socketState';
-export const windowStateType = 'windowState';
-export const translationConfigType = 'translationConfig';
+export const transcriptKey = 'transcript';
+export const translatedKey = 'translated';
+export const transcriptListKey = 'transcriptList';
+export const translatedListKey = 'translatedList';
+export const recognizedKey = 'recognized';
+export const microphoneStateKey = 'microphoneState';
+export const socketStateKey = 'socketState';
+export const windowStateKey = 'windowState';
+export const translationConfigKey = 'translationConfig';
 
 
-/* AppState typeと上記の文字列定義に差異がないかチェックする。 */
-const __AppStateTypeValidation__: (keyof AppState)[] = [
-  transcriptType,
-  translatedType,
-  transcriptListType,
-  translatedListType,
-  recognizedType,
-  microphoneStateType,
-  // recognizeModelType,
-  // translateToType,
-  socketStateType,
-  windowStateType,
-  translationConfigType,
+/* AppState keysと上記の文字列定義に差異がないかチェックする。 */
+const __AppStateKeyValidation__: (keyof AppState)[] = [
+  transcriptKey,
+  translatedKey,
+  transcriptListKey,
+  translatedListKey,
+  recognizedKey,
+  microphoneStateKey,
+  socketStateKey,
+  windowStateKey,
+  translationConfigKey,
 ];
 
 

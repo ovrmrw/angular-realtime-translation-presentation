@@ -4,9 +4,9 @@ import * as lodash from 'lodash';
 
 import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
-import { SimpleStore, updatedProperty } from '../simple-store';
+import { SimpleStore, isUpdatedKey } from '../simple-store';
 import { AppState, RecognizedObject } from '../../state';
-import { recognizedType, transcriptType, transcriptListType, translatedType, translatedListType, socketStateType } from '../../state';
+import { recognizedKey, transcriptKey, transcriptListKey, translatedKey, translatedListKey, socketStateKey } from '../../state';
 
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
@@ -40,7 +40,7 @@ export class WatsonSpeechToTextWebSocketService {
     private translateService: GcpTranslatorService,
   ) {
     this.store.getState()
-      .filter(updatedProperty.bind([socketStateType]))
+      .filter(isUpdatedKey.bind([socketStateKey]))
       .subscribe(state => {
         console.log('socket state:', state.socketState);
       });
@@ -73,15 +73,15 @@ export class WatsonSpeechToTextWebSocketService {
           }
 
           if (data && data.results) {
-            this.store.setState(recognizedType, (p) => data.state ? p : data);
+            this.store.setState(recognizedKey, (p) => data.state ? p : data);
 
             if (data.results[0].final) { // 認識が完了しているかどうか。
               const transcript = data.results[0].alternatives[0].transcript.trim().replace(/^D_/, '');
 
-              this.store.setState(transcriptType, transcript)
-                .then(s => this.store.setState(transcriptListType, (p) => [...p, s.transcript]))
-                .then(s => this.store.setState(translatedType, this.translateService.requestTranslate(transcript)))
-                .then(s => this.store.setState(translatedListType, (p) => [...p, s.translated]));
+              this.store.setState(transcriptKey, transcript)
+                .then(s => this.store.setState(transcriptListKey, (p) => [...p, s.transcript]))
+                .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
+                .then(s => this.store.setState(translatedListKey, (p) => [...p, s.translated]));
             }
           }
         };
@@ -89,7 +89,7 @@ export class WatsonSpeechToTextWebSocketService {
         this.ws.onerror = (event) => {
           console.error('ws.onerror', event);
           reject();
-          this.store.setState(socketStateType, event.type);
+          this.store.setState(socketStateKey, event.type);
         };
 
         this.ws.onopen = (event) => {
@@ -99,12 +99,12 @@ export class WatsonSpeechToTextWebSocketService {
             console.log('{ action: "start" } is sent.');
           }
           resolve();
-          this.store.setState(socketStateType, event.type);
+          this.store.setState(socketStateKey, event.type);
         };
 
         this.ws.onclose = (event) => {
           console.log('ws.onclose', event);
-          this.store.setState(socketStateType, event.type);
+          this.store.setState(socketStateKey, event.type);
         };
       }
     });

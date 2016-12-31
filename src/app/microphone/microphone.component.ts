@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { MicrophoneService } from '../../lib/microphone';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore, updatedProperty } from '../../lib/simple-store';
+import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
 import { AppState } from '../../state';
-import { microphoneStateType } from '../../state';
+import { microphoneStateKey } from '../../state';
 
 
 @Component({
@@ -32,7 +32,7 @@ export class MicrophoneComponent extends Disposer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.disposable = this.store.getState()
-      .filter(updatedProperty.bind([microphoneStateType]))
+      .filter(isUpdatedKey.bind([microphoneStateKey]))
       .subscribe(state => {
         this.isActive = state.microphoneState.isActive;
         this.cd.markForCheck();

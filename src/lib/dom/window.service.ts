@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { SimpleStore } from '../simple-store';
 import { AppState, WindowState } from '../../state';
-import { windowStateType } from '../../state';
+import { windowStateKey } from '../../state';
 
 
 @Injectable()
@@ -31,7 +31,7 @@ export class WindowService {
       innerWidth: window.innerWidth,
       innerHeight: window.innerHeight,
     };
-    this.store.setState(windowStateType, obj);
+    this.store.setState(windowStateKey, obj);
   }
 
 }

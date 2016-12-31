@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../lib/class';
-import { SimpleStore, updatedProperty } from '../lib/simple-store';
+import { SimpleStore, isUpdatedKey } from '../lib/simple-store';
 import { AppState } from '../state';
-import { windowStateType } from '../state';
+import { windowStateKey } from '../state';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class SlideComponent extends Disposer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.disposable = this.store.getState()
-      .filter(updatedProperty.bind([windowStateType]))
+      .filter(isUpdatedKey.bind([windowStateKey]))
       .subscribe(state => {
         this.screenWidth = state.windowState.innerWidth;
         this.screenHeight = state.windowState.innerHeight - 50;

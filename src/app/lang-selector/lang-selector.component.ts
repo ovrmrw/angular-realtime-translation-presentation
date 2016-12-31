@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 
 import { MicrophoneService } from '../../lib/microphone';
-import { SimpleStore, updatedProperty } from '../../lib/simple-store';
+import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
 import { AppState, TranslationConfig } from '../../state';
-import { translationConfigType } from '../../state';
+import { translationConfigKey } from '../../state';
 
 
 const EnglishToJapansese = 'en -> ja';
@@ -42,11 +42,11 @@ export class LangSelectorComponent {
 
   onChanged(event: Event): void {
     // console.log('onChanged', event.target['value']);
-    const lang: string = event.target['value'];
-    if (lang === EnglishToJapansese) {
-      this.store.setState(translationConfigType, EnglishToJapanseseConfig);
-    } else if (lang === JapaneseToEnglish) {
-      this.store.setState(translationConfigType, JapaneseToEnglishConfig);
+    const selected: string = event.target['value'];
+    if (selected === EnglishToJapansese) {
+      this.store.setState(translationConfigKey, EnglishToJapanseseConfig);
+    } else if (selected === JapaneseToEnglish) {
+      this.store.setState(translationConfigKey, JapaneseToEnglishConfig);
     }
     this.micService.stop();
   }
