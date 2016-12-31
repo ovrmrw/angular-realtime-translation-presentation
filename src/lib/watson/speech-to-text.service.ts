@@ -22,6 +22,7 @@ export class WatsonSpeechToTextService {
 }
 
 
+
 interface TokenObject {
   token: string;
 }

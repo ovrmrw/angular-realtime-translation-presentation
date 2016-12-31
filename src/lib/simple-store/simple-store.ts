@@ -4,7 +4,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { QueueConcurrent, InitialState, Action, ValueTypes } from './common';
 
 
-export const latestUpdatedKey = '_latestUpdatedKey';
+export const latestUpdatedKey = '__latest__';
 
 
 @Injectable()

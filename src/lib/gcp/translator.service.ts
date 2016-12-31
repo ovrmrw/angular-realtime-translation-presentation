@@ -32,10 +32,12 @@ export class GcpTranslatorService {
 }
 
 
+
 interface Payload {
   text: string;
   translateTo: string;
 }
+
 
 interface TranslationObect {
   translation: string;

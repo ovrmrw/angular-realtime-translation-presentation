@@ -121,6 +121,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 }
 
 
+
 interface Meteor {
   text: string;
   top: number;

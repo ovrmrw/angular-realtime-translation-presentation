@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { MicrophoneService } from '../../lib/microphone';
 
 import { Disposer } from '../../lib/class';
+import { MicrophoneService } from '../../lib/microphone';
 import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { microphoneStateKey } from '../../state';
