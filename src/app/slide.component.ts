@@ -1,5 +1,10 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { Disposer } from '../lib/class';
+import { SimpleStore, updatedProperty } from '../lib/simple-store';
+import { AppState } from '../state';
+import { windowStateType } from '../state';
 
 
 @Component({
@@ -13,30 +18,32 @@ import { Observable } from 'rxjs';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideComponent implements OnInit {
+export class SlideComponent extends Disposer implements OnInit, OnDestroy {
   screenWidth: number;
   screenHeight: number;
 
 
   constructor(
+    private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
-  ) { }
+  ) {
+    super();
+  }
 
 
   ngOnInit() {
-    this.resizeScreen();
-
-    Observable.fromEvent<Event>(window, 'resize')
-      .subscribe(event => {
-        this.resizeScreen();
+    this.disposable = this.store.getState()
+      .filter(updatedProperty.bind([windowStateType]))
+      .subscribe(state => {
+        this.screenWidth = state.windowState.innerWidth;
+        this.screenHeight = state.windowState.innerHeight - 50;
+        this.cd.markForCheck();
       });
   }
 
 
-  resizeScreen() {
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight - 50;
-    this.cd.markForCheck();
+  ngOnDestroy() {
+    this.disposeSubscriptions();
   }
 
 }

@@ -8,6 +8,7 @@ import { MicrophoneComponent } from './microphone';
 import { SlideComponent } from './slide.component';
 import { MeteorTowerComponent, MeteorComponent } from './meteor';
 import { FlashComponent } from './flash';
+import { LangSelectorComponent } from './lang-selector';
 
 import { LibModule } from '../lib/lib.module';
 import { QueueConcurrent, InitialState } from '../lib/simple-store';
@@ -22,6 +23,7 @@ import { initialState } from '../state';
     MeteorComponent,
     MeteorTowerComponent,
     FlashComponent,
+    LangSelectorComponent,
   ],
   imports: [
     BrowserModule,

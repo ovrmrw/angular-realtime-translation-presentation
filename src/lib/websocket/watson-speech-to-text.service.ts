@@ -56,7 +56,7 @@ export class WatsonSpeechToTextWebSocketService {
     return new Promise<void>(async (resolve, reject) => {
       const token = await this.recognizeService.requestToken();
       const state = await this.store.getState().take(1).toPromise();
-      const model = state.recognizeModel;
+      const model = state.translationConfig.recognizeModel;
 
       if (!this.ws && token && model) {
         const tokenSetUrl = this.createUrl(token, model);
@@ -76,7 +76,7 @@ export class WatsonSpeechToTextWebSocketService {
             this.store.setState(recognizedType, (p) => data.state ? p : data);
 
             if (data.results[0].final) { // 認識が完了しているかどうか。
-              const transcript = data.results[0].alternatives[0].transcript.trim();
+              const transcript = data.results[0].alternatives[0].transcript.trim().replace(/^D_/, '');
 
               this.store.setState(transcriptType, transcript)
                 .then(s => this.store.setState(transcriptListType, (p) => [...p, s.transcript]))

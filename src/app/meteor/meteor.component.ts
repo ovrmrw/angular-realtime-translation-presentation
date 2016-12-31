@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ElementRef } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/core';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -31,6 +32,11 @@ export class MeteorComponent implements OnInit {
   @Input() color: string;
   startPosition: number;
   opacity: number = 1;
+
+
+  constructor(
+    private el: ElementRef,
+  ) { }
 
 
   ngOnInit() {

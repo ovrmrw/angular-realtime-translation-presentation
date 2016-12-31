@@ -13,9 +13,17 @@ export const initialState: AppState = {
   microphoneState: {
     isActive: false
   },
-  recognizeModel: 'en-US_BroadbandModel',
-  translateTo: 'ja',
+  // recognizeModel: 'en-US_BroadbandModel',
+  // translateTo: 'ja',
   socketState: '',
+  windowState: {
+    innerWidth: 0,
+    innerHeight: 0,
+  },
+  translationConfig: {
+    recognizeModel: 'en-US_BroadbandModel',
+    translateTo: 'ja',
+  }
 };
 
 
@@ -30,9 +38,11 @@ export type AppState = {
   uuid: string;
   recognized: RecognizedObject | null;
   microphoneState: MicrophoneState;
-  recognizeModel: string;
-  translateTo: string;
+  // recognizeModel: string;
+  // translateTo: string;
   socketState: string;
+  windowState: WindowState;
+  translationConfig: TranslationConfig;
 };
 
 
@@ -43,9 +53,11 @@ export const transcriptListType = 'transcriptList';
 export const translatedListType = 'translatedList';
 export const recognizedType = 'recognized';
 export const microphoneStateType = 'microphoneState';
-export const recognizeModelType = 'recognizeModel';
-export const translateToType = 'translateTo';
+// export const recognizeModelType = 'recognizeModel';
+// export const translateToType = 'translateTo';
 export const socketStateType = 'socketState';
+export const windowStateType = 'windowState';
+export const translationConfigType = 'translationConfig';
 
 
 /* AppState typeと上記の文字列定義に差異がないかチェックする。 */
@@ -56,9 +68,11 @@ const __AppStateTypeValidation__: (keyof AppState)[] = [
   translatedListType,
   recognizedType,
   microphoneStateType,
-  recognizeModelType,
-  translateToType,
+  // recognizeModelType,
+  // translateToType,
   socketStateType,
+  windowStateType,
+  translationConfigType,
 ];
 
 
@@ -86,4 +100,16 @@ export interface RecognizedAlternative {
   confidence?: number;
   word_confidence?: Array<string | number>[]; // 配列の配列
   timestamp?: Array<string | number>[]; // 配列の配列
+}
+
+
+export interface WindowState {
+  innerWidth: number;
+  innerHeight: number;
+}
+
+
+export interface TranslationConfig {
+  recognizeModel: string;
+  translateTo: string;
 }

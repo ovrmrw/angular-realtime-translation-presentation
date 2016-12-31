@@ -19,7 +19,7 @@ export class GcpTranslatorService {
   async requestTranslate(text: string): Promise<string> {
     const state = await this.store.getState().take(1).toPromise();
     const payload: Payload = {
-      translateTo: state.translateTo,
+      translateTo: state.translationConfig.translateTo,
       text,
     };
     const result = await this.http.post(TRANSLATOR_URL, payload)

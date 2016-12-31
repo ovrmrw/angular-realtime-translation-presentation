@@ -4,41 +4,41 @@ import { SimpleStore } from '../lib/simple-store';
 import { AppState } from '../state';
 import { Disposer } from '../lib/class';
 import { WatsonSpeechToTextService } from '../lib/watson';
+import { WindowService } from '../lib/dom';
 
 
 @Component({
   selector: 'app-root',
   template: `
     <app-slide></app-slide>
-    <app-microphone></app-microphone>
-    <app-meteor-tower></app-meteor-tower>
+    <form class="form-inline">
+      <div class="form-group col-xs-4">
+        <app-microphone></app-microphone>
+      </div>
+      <div class="form-group col-xs-4">
+        <app-lang-selector></app-lang-selector>
+      </div>
+      <div class="offset-xs-4"></div>
+    </form>
+
     <app-flash></app-flash>
+    <app-meteor-tower></app-meteor-tower>
   `,
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends Disposer implements OnInit, OnDestroy {
-  // recognized;
-  // transcriptList: string[];
-  // translatedList: string[];
-
-
   constructor(
     private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
+    private __windowService: WindowService,
   ) {
     super();
   }
 
 
   ngOnInit() {
-    // this.disposable = this.simpleStore.getState()
-    //   .subscribe(state => {
-    //     this.recognized = state.recognized;
-    //     this.transcriptList = state.transcriptList;
-    //     this.translatedList = state.translatedList;
-    //     this.cd.markForCheck();
-    //   });
+
   }
 
 

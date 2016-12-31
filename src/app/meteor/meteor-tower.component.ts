@@ -4,22 +4,20 @@ import { Observable } from 'rxjs';
 import { Disposer } from '../../lib/class';
 import { SimpleStore, updatedProperty } from '../../lib/simple-store';
 import { AppState } from '../../state';
-import { transcriptListType, translatedListType } from '../../state';
+import { transcriptListType, translatedListType, windowStateType } from '../../state';
 
 
 @Component({
   selector: 'app-meteor-tower',
   template: `
-    <app-meteor *ngFor="let m of meteors; let i = index" [text]="m.text" [top]="m.top" [color]="m.color" [index]="i">
+    <app-meteor *ngFor="let m of meteors; let i = index" [text]="m.text" [top]="m.top" [color]="m.color" [index]="i + 1">
     </app-meteor>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy {
   meteors: Meteor[] = [];
-  screenHeight: number = window.innerHeight;
-  transcriptIndex: number = 0;
-  translatedIndex: number = 0;
+  screenHeight: number;
 
 
   constructor(
@@ -31,44 +29,42 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    let previousTop = 9999;
-
-    Observable
-      .interval(2000)
-      .filter(() => false)
-      .map(value => 'this is a test ' + value)
-      .subscribe(text => {
-        let top: number;
-        do {
-          top = (this.screenHeight - 100) * Math.random(); // 高さをランダムに決定。
-        } while (Math.abs(top - previousTop) < (this.screenHeight / 10)); // 前回と縦10分割位以上の差がつくこと。
-        previousTop = top;
-
-        const timestamp = new Date().getTime();
-        this.meteors.push({ text, top, timestamp, color: 'white' });
-        this.cd.markForCheck();
-
-        /* filtering array */
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 15); // 15秒後に削除する。
-      });
+    this.flowTestTexts();
 
 
     this.disposable = this.store.getState()
-      .filter(updatedProperty.bind([transcriptListType, translatedListType]))
-      .scan((previousTop, state) => {
-        const timestamp: number = new Date().getTime();
-        const top: number = this.getTopPosition(previousTop);
-        // const top: number = this.getTopPosition2(previousTop, 60);
+      .filter(updatedProperty.bind([windowStateType]))
+      .subscribe(state => {
+        this.screenHeight = state.windowState.innerHeight;
+      });
 
-        if (state.transcriptList.length > this.transcriptIndex) {
+
+    const initialObj: ScanLoopObject = {
+      top: 0,
+      transcriptIndex: 0,
+      translatedIndex: 0,
+    };
+
+    this.disposable = this.store.getState()
+      .filter(updatedProperty.bind([transcriptListType, translatedListType]))
+      .scan((obj, state) => {
+        const timestamp = new Date().getTime();
+        const top = this.getTopPosition(obj.top);
+        // const top: number = this.getTopPosition2(obj.top, 60);
+
+        if (state.transcriptList.length > obj.transcriptIndex) {
           this.meteors.push({ text: state.transcript, top, timestamp, color: 'lightgray' });
-          this.transcriptIndex = state.transcriptList.length;
-        } else if (state.translatedList.length > this.translatedIndex) {
-          this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' });
-          this.translatedIndex = state.translatedList.length;
         }
-        return top;
-      }, 0)
+        if (state.translatedList.length > obj.translatedIndex) {
+          this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' });
+        }
+
+        return {
+          top,
+          transcriptIndex: state.transcriptList.length,
+          translatedIndex: state.translatedList.length,
+        };
+      }, initialObj)
       .subscribe(() => {
         this.cd.markForCheck();
 
@@ -76,11 +72,26 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         const now = new Date().getTime();
         this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 15); // 15秒後に削除する。
       });
+  }
 
 
-    Observable.fromEvent<Event>(window, 'resize')
-      .subscribe(event => {
-        this.screenHeight = window.innerHeight;
+  flowTestTexts() {
+    let previousTop = 0;
+
+    Observable
+      .interval(2000)
+      .map(value => 'this is a test ' + value)
+      .subscribe(text => {
+        // const top = this.getTopPosition(previousTop);
+        const top = this.getTopPosition2(previousTop, 60);
+        previousTop = top;
+
+        const timestamp = new Date().getTime();
+        this.meteors.push({ text, top, timestamp, color: 'lightgreen' });
+        this.cd.markForCheck();
+
+        /* filtering array */
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 15); // 15秒後に削除する。
       });
   }
 
@@ -93,14 +104,14 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
   getTopPosition(previousTop: number): number {
     let top: number;
     do {
-      top = (this.screenHeight - 100) * Math.random(); // 高さをランダムに決定。
-    } while (Math.abs(top - previousTop) < (this.screenHeight / 10)); // 前回と縦10分割位以上の差がつくこと。
+      top = (this.screenHeight * 0.9) * Math.random(); // 高さをランダムに決定。
+    } while (Math.abs(top - previousTop) < (this.screenHeight * 0.1)); // 前回と縦10分割位以上の差がつくこと。
     return top;
   }
 
 
   getTopPosition2(previousTop: number, diff: number): number {
-    if (previousTop + diff > this.screenHeight - 100) {
+    if (previousTop + diff > this.screenHeight * 0.9) {
       return 0;
     } else {
       return previousTop + diff;
@@ -115,4 +126,11 @@ interface Meteor {
   top: number;
   timestamp: number;
   color: string;
+}
+
+
+interface ScanLoopObject {
+  top: number;
+  transcriptIndex: number;
+  translatedIndex: number;
 }

@@ -1,12 +1,11 @@
 .meteor {
   position: absolute;
-  left: 0px;
-  top: 0px;
   white-space: nowrap;
   font-size: 40pt;
   font-weight: 500;
   color: white;
   text-shadow: 3px 3px 2px black;
+  /*will-change: auto;*/
 }
 
 .no-select {
