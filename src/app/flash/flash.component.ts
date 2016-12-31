@@ -31,7 +31,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.disposable = this.simpleStore.getState()
-      .filter(updatedProperty(RECOGNIZED).bind(this))
+      .filter(updatedProperty(RECOGNIZED).bind(null))
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
           this.text = state.recognized.results[0].alternatives[0].transcript;

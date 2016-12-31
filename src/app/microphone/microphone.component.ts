@@ -34,7 +34,7 @@ export class MicrophoneComponent extends Disposer implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.disposable = this.simpleStore.getState()
-      .filter(updatedProperty(MICROPHONE_STATE).bind(this))
+      .filter(updatedProperty(MICROPHONE_STATE).bind(null))
       .subscribe(state => {
         this.isActive = state.microphoneState.isActive;
         this.cd.markForCheck();

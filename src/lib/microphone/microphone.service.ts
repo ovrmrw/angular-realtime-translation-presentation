@@ -27,7 +27,7 @@ export class MicrophoneService {
     private simpleStore: SimpleStore<AppState>,
   ) {
     this.simpleStore.getState()
-      .filter(updatedProperty(SOCKET_STATE).bind(this))
+      .filter(updatedProperty(SOCKET_STATE).bind(null))
       .subscribe(state => {
         if (this.running && (state.socketState === 'error' || state.socketState === 'close')) {
           this.stop();

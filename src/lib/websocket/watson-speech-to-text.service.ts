@@ -47,7 +47,7 @@ export class WatsonSpeechToTextWebSocketService {
     private translateService: GcpTranslatorService,
   ) {
     this.simpleStore.getState()
-      .filter(updatedProperty(SOCKET_STATE).bind(this))
+      .filter(updatedProperty(SOCKET_STATE).bind(null))
       .subscribe(state => {
         console.log('socket state:', state.socketState);
       });

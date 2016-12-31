@@ -57,7 +57,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
     this.disposable = this.simpleStore.getState()
-      .filter(updatedProperty(TRANSCRIPT_LIST, TRANSLATED_LIST).bind(this))
+      .filter(updatedProperty(TRANSCRIPT_LIST, TRANSLATED_LIST).bind(null))
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);
