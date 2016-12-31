@@ -19,6 +19,7 @@ export const initialState: AppState = {
 };
 
 
+/* Stateの型定義。 */
 export type AppState = {
   transcript: string;
   translated: string;
@@ -33,6 +34,32 @@ export type AppState = {
   translateTo: string;
   socketState: string;
 };
+
+
+/* Component, Serviceでimportして使う文字列。 */
+export const transcriptType = 'transcript';
+export const translatedType = 'translated';
+export const transcriptListType = 'transcriptList';
+export const translatedListType = 'translatedList';
+export const recognizedType = 'recognized';
+export const microphoneStateType = 'microphoneState';
+export const recognizeModelType = 'recognizeModel';
+export const translateToType = 'translateTo';
+export const socketStateType = 'socketState';
+
+
+/* AppState typeと上記の文字列定義に差異がないかチェックする。 */
+const __AppStateTypeValidation__: (keyof AppState)[] = [
+  transcriptType,
+  translatedType,
+  transcriptListType,
+  translatedListType,
+  recognizedType,
+  microphoneStateType,
+  recognizeModelType,
+  translateToType,
+  socketStateType,
+];
 
 
 export interface MicrophoneState {

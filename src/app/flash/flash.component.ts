@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 import { Disposer } from '../../lib/class';
 import { SimpleStore, updatedProperty } from '../../lib/simple-store';
 import { AppState } from '../../state';
-
-const RECOGNIZED = 'recognized';
-const _keyValidation: (keyof AppState)[] = [RECOGNIZED];
+import { recognizedType } from '../../state';
 
 
 @Component({
@@ -22,7 +20,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
 
   constructor(
-    private simpleStore: SimpleStore<AppState>,
+    private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) {
     super();
@@ -30,8 +28,8 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.disposable = this.simpleStore.getState()
-      .filter(updatedProperty(RECOGNIZED).bind(null))
+    this.disposable = this.store.getState()
+      .filter(updatedProperty.bind([recognizedType]))
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
           this.text = state.recognized.results[0].alternatives[0].transcript;

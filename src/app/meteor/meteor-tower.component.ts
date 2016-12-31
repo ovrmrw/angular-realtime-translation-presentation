@@ -1,13 +1,10 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { Disposer } from '../../lib/class';
 import { SimpleStore, updatedProperty } from '../../lib/simple-store';
 import { AppState } from '../../state';
-import { Disposer } from '../../lib/class';
-
-const TRANSCRIPT_LIST = 'transcriptList';
-const TRANSLATED_LIST = 'translatedList';
-const _keyValidation: (keyof AppState)[] = [TRANSCRIPT_LIST, TRANSLATED_LIST];
+import { transcriptListType, translatedListType } from '../../state';
 
 
 @Component({
@@ -26,7 +23,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   constructor(
-    private simpleStore: SimpleStore<AppState>,
+    private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) {
     super();
@@ -56,8 +53,8 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
       });
 
 
-    this.disposable = this.simpleStore.getState()
-      .filter(updatedProperty(TRANSCRIPT_LIST, TRANSLATED_LIST).bind(null))
+    this.disposable = this.store.getState()
+      .filter(updatedProperty.bind([transcriptListType, translatedListType]))
       .scan((previousTop, state) => {
         const timestamp: number = new Date().getTime();
         const top: number = this.getTopPosition(previousTop);

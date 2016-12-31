@@ -15,12 +15,12 @@ export class SimpleStore<T> {
 
   constructor(
     private zone: NgZone,
-    @Inject(InitialState)
-    private initialState: T,
+    @Inject(InitialState) @Optional()
+    private initialState: T | null,
     @Inject(QueueConcurrent) @Optional()
     private concurrent: number | null,
   ) {
-    this.provider$ = new BehaviorSubject<T>(initialState);
+    this.provider$ = new BehaviorSubject<T>(initialState || {} as T);
     this.createStore();
     this.applyEffectors();
   }
@@ -51,7 +51,7 @@ export class SimpleStore<T> {
           action.subject.next(newState);
         }, 0);
         return newState;
-      }, this.initialState)
+      }, this.initialState as T)
       .subscribe(newState => {
         console.log('newState:', newState);
         this.zone.run(() => {

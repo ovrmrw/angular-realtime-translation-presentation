@@ -11,11 +11,17 @@ export class WatsonSpeechToTextService {
   ) { }
 
 
-  requestToken(): Promise<string> {
-    return this.http.get(TOKEN_URL)
-      .map(res => res.json() as { token: string })
+  async requestToken(): Promise<string> {
+    const result = await this.http.get(TOKEN_URL)
+      .map(res => res.json() as TokenObject)
       .map(obj => obj.token)
       .toPromise();
+    return result;
   }
 
+}
+
+
+interface TokenObject {
+  token: string;
 }

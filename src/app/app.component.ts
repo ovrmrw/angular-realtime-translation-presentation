@@ -24,7 +24,7 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
 
 
   constructor(
-    private simpleStore: SimpleStore<AppState>,
+    private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) {
     super();

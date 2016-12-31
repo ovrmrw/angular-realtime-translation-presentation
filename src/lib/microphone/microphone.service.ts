@@ -5,15 +5,12 @@ const Microphone = require('./ibm/Microphone'); // written by IBM
 
 import { SimpleStore, updatedProperty } from '../simple-store';
 import { AppState, MicrophoneState } from '../../state';
+import { microphoneStateType, socketStateType } from '../../state';
 
 
 const micOptions = {
   bufferSize: 8192 // ctx.buffersize
 };
-
-const MICROPHONE_STATE = 'microphoneState';
-const SOCKET_STATE = 'socketState';
-const _keyValidation: (keyof AppState)[] = [MICROPHONE_STATE, SOCKET_STATE];
 
 
 @Injectable()
@@ -24,10 +21,10 @@ export class MicrophoneService {
 
   constructor(
     private recognizeService: WatsonSpeechToTextWebSocketService,
-    private simpleStore: SimpleStore<AppState>,
+    private store: SimpleStore<AppState>,
   ) {
-    this.simpleStore.getState()
-      .filter(updatedProperty(SOCKET_STATE).bind(null))
+    this.store.getState()
+      .filter(updatedProperty.bind([socketStateType]))
       .subscribe(state => {
         if (this.running && (state.socketState === 'error' || state.socketState === 'close')) {
           this.stop();
@@ -41,7 +38,7 @@ export class MicrophoneService {
   }
 
 
-  record() {
+  record(): void {
     this.stop();
 
     console.log('Starting WebSocket');
@@ -57,7 +54,7 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
-          this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running } as MicrophoneState);
+          this.store.setState(microphoneStateType, { isActive: this.running } as MicrophoneState);
         } else {
           console.log('recording is already running.');
         }
@@ -65,7 +62,7 @@ export class MicrophoneService {
   }
 
 
-  stop() {
+  stop(): void {
     console.log('Stopping microphone, sending stop action message');
     this.recognizeService.webSocketStop();
     if (this.mic) {
@@ -74,7 +71,7 @@ export class MicrophoneService {
       this.mic = null;
     }
     this.running = false;
-    this.simpleStore.setState(MICROPHONE_STATE, { isActive: this.running } as MicrophoneState);
+    this.store.setState(microphoneStateType, { isActive: this.running } as MicrophoneState);
   }
 
 }
