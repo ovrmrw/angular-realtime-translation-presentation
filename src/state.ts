@@ -1,14 +1,8 @@
-import * as uuid from 'uuid';
-
-
 export const initialState: AppState = {
   transcript: '',
   transcriptList: [],
   translated: '',
   translatedList: [],
-  restore: false,
-  afterRestored: false,
-  uuid: uuid.v4(), // 起動毎にクライアントを識別するためのユニークなIDを生成する。
   recognized: null,
   microphoneState: {
     isActive: false
@@ -31,9 +25,6 @@ export type AppState = {
   translated: string;
   transcriptList: string[];
   translatedList: string[];
-  restore: boolean;
-  afterRestored: boolean;
-  uuid: string;
   recognized: RecognizedObject | null;
   microphoneState: MicrophoneState;
   socketState: string;
