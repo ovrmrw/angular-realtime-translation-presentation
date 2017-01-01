@@ -4,7 +4,7 @@ import * as lodash from 'lodash';
 
 import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
-import { SimpleStore, isUpdatedKey } from '../simple-store';
+import { SimpleStore } from '../simple-store';
 import { AppState, RecognizedObject } from '../../state';
 import { recognizedKey, transcriptKey, transcriptListKey, translatedKey, translatedListKey, socketStateKey } from '../../state';
 
@@ -39,8 +39,13 @@ export class WatsonSpeechToTextWebSocketService {
     private recognizeService: WatsonSpeechToTextService,
     private translateService: GcpTranslatorService,
   ) {
+    this.initGetState();
+  }
+
+
+  private initGetState(): void {
     this.store.getState()
-      .filter(isUpdatedKey.bind([socketStateKey]))
+      .filterByUpdatedKey(socketStateKey)
       .subscribe(state => {
         console.log('socket state:', state.socketState);
       });

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
+import { SimpleStore } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { recognizedKey } from '../../state';
 
@@ -28,8 +28,13 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.initGetState();
+  }
+
+
+  private initGetState(): void {
     this.disposable = this.store.getState()
-      .filter(isUpdatedKey.bind([recognizedKey]))
+      .filterByUpdatedKey(recognizedKey)
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
           this.text = state.recognized.results[0].alternatives[0].transcript;

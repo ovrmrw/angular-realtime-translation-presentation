@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore, isUpdatedKey } from '../../lib/simple-store';
+import { SimpleStore } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { transcriptListKey, translatedListKey, windowStateKey } from '../../state';
 
@@ -30,10 +30,34 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.flowTestTexts();
+    this.initGetState();
+  }
 
 
+  private flowTestTexts(): void {
+    let previousTop = 0;
+
+    Observable
+      .interval(2000)
+      .map(value => 'this is a test ' + value)
+      .subscribe(text => {
+        // const top = this.getTopPosition(previousTop);
+        const top = this.getTopPosition2(previousTop, 60);
+        previousTop = top;
+
+        const timestamp = new Date().getTime();
+        this.meteors.push({ text, top, timestamp, color: 'lightgreen' });
+        this.cd.markForCheck();
+
+        /* filtering array */
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 15); // 15秒後に削除する。
+      });
+  }
+
+
+  private initGetState(): void {
     this.disposable = this.store.getState()
-      .filter(isUpdatedKey.bind([windowStateKey]))
+      .filterByUpdatedKey(windowStateKey)
       .subscribe(state => {
         this.screenHeight = state.windowState.innerHeight;
       });
@@ -46,7 +70,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
     };
 
     this.disposable = this.store.getState()
-      .filter(isUpdatedKey.bind([transcriptListKey, translatedListKey]))
+      .filterByUpdatedKey(transcriptListKey, translatedListKey)
       .scan((obj, state) => {
         const timestamp = new Date().getTime();
         const top = this.getTopPosition(obj.top);
@@ -71,27 +95,6 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         /* filtering array */
         const now = new Date().getTime();
         this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 15); // 15秒後に削除する。
-      });
-  }
-
-
-  flowTestTexts() {
-    let previousTop = 0;
-
-    Observable
-      .interval(2000)
-      .map(value => 'this is a test ' + value)
-      .subscribe(text => {
-        // const top = this.getTopPosition(previousTop);
-        const top = this.getTopPosition2(previousTop, 60);
-        previousTop = top;
-
-        const timestamp = new Date().getTime();
-        this.meteors.push({ text, top, timestamp, color: 'lightgreen' });
-        this.cd.markForCheck();
-
-        /* filtering array */
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 15); // 15秒後に削除する。
       });
   }
 
