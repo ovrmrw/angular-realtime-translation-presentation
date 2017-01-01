@@ -29,7 +29,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    this.flowTestTexts();
+    // this.flowTestTexts();
     this.initGetState();
   }
 
@@ -77,7 +77,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         // const top: number = this.getTopPosition2(obj.top, 60);
 
         if (state.transcriptList.length > obj.transcriptIndex) {
-          this.meteors.push({ text: state.transcript, top, timestamp, color: 'lightgray' });
+          this.meteors.push({ text: state.transcript, top, timestamp, color: 'white' });
         }
         if (state.translatedList.length > obj.translatedIndex) {
           this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' });
@@ -107,14 +107,14 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
   getTopPosition(previousTop: number): number {
     let top: number;
     do {
-      top = (this.screenHeight * 0.9) * Math.random(); // 高さをランダムに決定。
+      top = (this.screenHeight * 0.8) * Math.random(); // 高さをランダムに決定。
     } while (Math.abs(top - previousTop) < (this.screenHeight * 0.1)); // 前回と縦10分割位以上の差がつくこと。
     return top;
   }
 
 
   getTopPosition2(previousTop: number, diff: number): number {
-    if (previousTop + diff > this.screenHeight * 0.9) {
+    if (previousTop + diff > this.screenHeight * 0.8) {
       return 0;
     } else {
       return previousTop + diff;

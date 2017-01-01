@@ -8,8 +8,17 @@ import { AppState, MicrophoneState } from '../../state';
 import { microphoneStateKey, socketStateKey } from '../../state';
 
 
-const micOptions = {
-  bufferSize: 8192 // ctx.buffersize
+const AudioCtx = window.AudioContext;
+let audioContext: AudioContext;
+if (AudioCtx) {
+  audioContext = new AudioCtx(); // AudioContextはここで一回だけ生成する。
+} else {
+  throw new Error('AudioContext is not found on window object.');
+}
+
+const MIC_OPTIONS = {
+  bufferSize: 8192,
+  audioContext,
 };
 
 
@@ -51,7 +60,7 @@ export class MicrophoneService {
       .then(() => {
         if (!this.running) {
           console.log('Starting microphone');
-          this.mic = new Microphone(micOptions);
+          this.mic = new Microphone(MIC_OPTIONS);
           this.mic.onAudio = (blob: Blob) => {
             if (this.ws && this.ws.readyState < 2) {
               this.ws.send(blob);

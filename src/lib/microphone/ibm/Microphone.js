@@ -40,7 +40,13 @@ function Microphone(_options) {
   // Chrome or Firefox or IE User media
   if (!navigator.getUserMedia) {
     navigator.getUserMedia = navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia || navigator.msGetUserMedia;
+      navigator.mozGetUserMedia || navigator.msGetUserMedia;
+  }
+
+
+  this.audioContext = options.audioContext;
+  if (!this.audioContext) {
+    throw new Error('audioContext is not defined.');
   }
 
 }
@@ -49,13 +55,13 @@ function Microphone(_options) {
  * Called when the user reject the use of the michrophone
  * @param  error The error
  */
-Microphone.prototype.onPermissionRejected = function() {
+Microphone.prototype.onPermissionRejected = function () {
   console.log('Microphone.onPermissionRejected()');
   this.requestedAccess = false;
   this.onError('Permission to access the microphone rejeted.');
 };
 
-Microphone.prototype.onError = function(error) {
+Microphone.prototype.onError = function (error) {
   console.log('Microphone.onError():', error);
 };
 
@@ -64,14 +70,14 @@ Microphone.prototype.onError = function(error) {
  * @param  {Object} stream The Stream to connect to
  *
  */
-Microphone.prototype.onMediaStream = function(stream) {
-  var AudioCtx = window.AudioContext || window.webkitAudioContext;
+Microphone.prototype.onMediaStream = function (stream) {
+  // var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
-  if (!AudioCtx)
-    throw new Error('AudioContext not available');
+  // if (!AudioCtx)
+  //   throw new Error('AudioContext not available');
 
-  if (!this.audioContext)
-    this.audioContext = new AudioCtx();
+  // if (!this.audioContext)
+  //   this.audioContext = new AudioCtx();
 
   var gain = this.audioContext.createGain();
   var audioInput = this.audioContext.createMediaStreamSource(stream);
@@ -80,7 +86,7 @@ Microphone.prototype.onMediaStream = function(stream) {
 
   if (!this.mic) {
     this.mic = this.audioContext.createScriptProcessor(this.bufferSize,
-    this.inputChannels, this.outputChannels);
+      this.inputChannels, this.outputChannels);
   }
 
   // uncomment the following line if you want to use your microphone sample rate
@@ -102,7 +108,7 @@ Microphone.prototype.onMediaStream = function(stream) {
  * to send audio chunks.
  * @param  {object} data audio
  */
-Microphone.prototype._onaudioprocess = function(data) {
+Microphone.prototype._onaudioprocess = function (data) {
   if (!this.recording) {
     // We speak but we are not recording
     return;
@@ -125,8 +131,8 @@ Microphone.prototype._onaudioprocess = function(data) {
 /**
  * Start the audio recording
  */
-Microphone.prototype.record = function() {
-  if (!navigator.getUserMedia){
+Microphone.prototype.record = function () {
+  if (!navigator.getUserMedia) {
     this.onError('Browser doesn\'t support microphone input');
     return;
   }
@@ -135,7 +141,7 @@ Microphone.prototype.record = function() {
   }
 
   this.requestedAccess = true;
-  navigator.getUserMedia({audio: true},
+  navigator.getUserMedia({ audio: true },
     this.onMediaStream.bind(this), // Microphone permission granted
     this.onPermissionRejected.bind(this)); // Microphone permission rejected
 };
@@ -143,7 +149,7 @@ Microphone.prototype.record = function() {
 /**
  * Stop the audio recording
  */
-Microphone.prototype.stop = function() {
+Microphone.prototype.stop = function () {
   if (!this.recording)
     return;
   if (JSON.parse(localStorage.getItem('playback')))
@@ -166,7 +172,7 @@ Microphone.prototype.stop = function() {
  * @return {Blob} 'audio/l16' chunk
  * @deprecated This method is depracated
  */
-Microphone.prototype._exportDataBufferTo16Khz = function(bufferNewSamples) {
+Microphone.prototype._exportDataBufferTo16Khz = function (bufferNewSamples) {
   var buffer = null,
     newSamples = bufferNewSamples.length,
     unusedSamples = this.bufferUnusedSamples.length;
@@ -186,10 +192,10 @@ Microphone.prototype._exportDataBufferTo16Khz = function(bufferNewSamples) {
 
   // downsampling variables
   var filter = [
-      -0.037935, -0.00089024, 0.040173, 0.019989, 0.0047792, -0.058675, -0.056487,
-      -0.0040653, 0.14527, 0.26927, 0.33913, 0.26927, 0.14527, -0.0040653, -0.056487,
-      -0.058675, 0.0047792, 0.019989, 0.040173, -0.00089024, -0.037935
-    ],
+    -0.037935, -0.00089024, 0.040173, 0.019989, 0.0047792, -0.058675, -0.056487,
+    -0.0040653, 0.14527, 0.26927, 0.33913, 0.26927, 0.14527, -0.0040653, -0.056487,
+    -0.058675, 0.0047792, 0.019989, 0.040173, -0.00089024, -0.037935
+  ],
     samplingRateRatio = this.audioContext.sampleRate / 16000,
     nOutputSamples = Math.floor((buffer.length - filter.length) / (samplingRateRatio)) + 1,
     pcmEncodedBuffer16k = new ArrayBuffer(nOutputSamples * 2),
@@ -293,19 +299,19 @@ Microphone.prototype._exportDataBufferTo16Khz = function(bufferNewSamples) {
 //   return new Blob([dataView], {type: 'audio/l16'});
 // };
 
-Microphone.prototype._exportDataBuffer = function(buffer){
+Microphone.prototype._exportDataBuffer = function (buffer) {
   utils.exportDataBuffer(buffer, this.bufferSize);
 };
 
 
 // Functions used to control Microphone events listeners.
-Microphone.prototype.onStartRecording = function() {};
-Microphone.prototype.onStopRecording = function() {};
-Microphone.prototype.onAudio = function() {};
+Microphone.prototype.onStartRecording = function () { };
+Microphone.prototype.onStopRecording = function () { };
+Microphone.prototype.onAudio = function () { };
 
 module.exports = Microphone;
 
-Microphone.prototype.saveData = function(samples) {
+Microphone.prototype.saveData = function (samples) {
   for (var i = 0; i < samples.length; ++i) {
     this.samplesAll[this.samplesAllOffset + i] = samples[i];
   }
@@ -313,17 +319,17 @@ Microphone.prototype.saveData = function(samples) {
   console.log('samples: ' + this.samplesAllOffset);
 };
 
-Microphone.prototype.playWav = function() {
+Microphone.prototype.playWav = function () {
   var samples = this.samplesAll.subarray(0, this.samplesAllOffset);
   var dataview = this.encodeWav(samples, 1, this.audioContext.sampleRate);
-  var audioBlob = new Blob([dataview], {type: 'audio/l16'});
+  var audioBlob = new Blob([dataview], { type: 'audio/l16' });
   var url = window.URL.createObjectURL(audioBlob);
   var audio = new Audio();
   audio.src = url;
   audio.play();
 };
 
-Microphone.prototype.encodeWav = function(samples, numChannels, sampleRate) {
+Microphone.prototype.encodeWav = function (samples, numChannels, sampleRate) {
   console.log('#samples: ' + samples.length);
   var buffer = new ArrayBuffer(44 + samples.length * 2);
   var view = new DataView(buffer);
@@ -360,14 +366,14 @@ Microphone.prototype.encodeWav = function(samples, numChannels, sampleRate) {
   return view;
 };
 
-Microphone.prototype.writeString = function(view, offset, string){
-  for (var i = 0; i < string.length; i++){
+Microphone.prototype.writeString = function (view, offset, string) {
+  for (var i = 0; i < string.length; i++) {
     view.setUint8(offset + i, string.charCodeAt(i));
   }
 };
 
-Microphone.prototype.floatTo16BitPCM = function(output, offset, input){
-  for (var i = 0; i < input.length; i++, offset += 2){
+Microphone.prototype.floatTo16BitPCM = function (output, offset, input) {
+  for (var i = 0; i < input.length; i++ , offset += 2) {
     var s = Math.max(-1, Math.min(1, input[i]));
     output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
   }

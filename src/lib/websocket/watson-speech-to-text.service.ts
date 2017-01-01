@@ -2,6 +2,7 @@ import { Injectable, Inject, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import * as lodash from 'lodash';
 
+import { WatsonSpeechToTextStartOption } from './common';
 import { WatsonSpeechToTextService } from '../watson';
 import { GcpTranslatorService } from '../gcp';
 import { SimpleStore } from '../simple-store';
@@ -11,20 +12,20 @@ import { recognizedKey, transcriptKey, transcriptListKey, translatedKey, transla
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize';
 
-const startOptions = {
+const START_OPTIONS = {
   'action': 'start',
   'content-type': 'audio/l16;rate=16000',
-  'interim_results': true,
-  'continuous': true,
-  'word_confidence': true,
-  'timestamps': true,
+  // 'interim_results': true,
+  // 'continuous': true,
+  // 'word_confidence': true,
+  // 'timestamps': true,
   // 'max_alternatives': 3,
-  'inactivity_timeout': 5, // 30,
+  // 'inactivity_timeout': 30,
   // 'word_alternatives_threshold': 0.001,
   // 'smart_formatting': true,
 };
 
-const stopOptions = {
+const STOP_OPTIONS = {
   'action': 'stop'
 };
 
@@ -32,14 +33,18 @@ const stopOptions = {
 @Injectable()
 export class WatsonSpeechToTextWebSocketService {
   private ws: WebSocket | null = null;
+  private startOptions: {};
 
 
   constructor(
     private store: SimpleStore<AppState>,
     private recognizeService: WatsonSpeechToTextService,
     private translateService: GcpTranslatorService,
+    @Inject(WatsonSpeechToTextStartOption) @Optional()
+    private options: {} | null,
   ) {
     this.initGetState();
+    this.startOptions = Object.assign(START_OPTIONS, options);
   }
 
 
@@ -100,7 +105,7 @@ export class WatsonSpeechToTextWebSocketService {
         this.ws.onopen = (event) => {
           console.log('ws.onopen', event);
           if (this.ws) {
-            this.ws.send(JSON.stringify(startOptions));
+            this.ws.send(JSON.stringify(START_OPTIONS));
             console.log('{ action: "start" } is sent.');
           }
           resolve();
@@ -118,7 +123,7 @@ export class WatsonSpeechToTextWebSocketService {
 
   webSocketStop() {
     if (this.ws) {
-      this.ws.send(JSON.stringify(stopOptions));
+      this.ws.send(JSON.stringify(STOP_OPTIONS));
       console.log('{ action: "stop" } is sent.');
       this.ws.close();
       this.ws = null;

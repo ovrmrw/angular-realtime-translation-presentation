@@ -11,7 +11,7 @@ import { windowStateKey } from '../state';
   selector: 'app-slide',
   template: `
     <iframe 
-      src="https://docs.google.com/presentation/d/1mumaB2_ZnQpsYquqm-iPoj_HMMbwSrpd44ynSPBfUMg/embed?start=false&loop=false&delayms=3000"
+      src="https://docs.google.com/presentation/d/1rwmyRW99N4ZAPM5gyDGjgv0yvJXVATUom6rNxAZrYvQ/embed?start=false&loop=false&delayms=3000"
       frameborder="0" [width]="screenWidth" [height]="screenHeight" allowfullscreen="true" 
       mozallowfullscreen="true" webkitallowfullscreen="true">
     </iframe>
