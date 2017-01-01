@@ -29,7 +29,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    // this.flowTestTexts();
+    this.flowTestTexts();
     this.initGetState();
   }
 
@@ -108,7 +108,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
     let top: number;
     do {
       top = (this.screenHeight * 0.8) * Math.random(); // 高さをランダムに決定。
-    } while (Math.abs(top - previousTop) < (this.screenHeight * 0.1)); // 前回と縦10分割位以上の差がつくこと。
+    } while (Math.abs(top - previousTop) < (this.screenHeight / 10)); // 前回と縦10分割位以上の差がつくこと。
     return top;
   }
 

@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
       state('true', style({ transform: 'translateX(-5000px)' })), // 最終的に到達する座標。
       transition('void => 1', [
         style({ transform: 'translateX(0px)' }),
-        animate(1000 * 15) // 15秒かけて移動する。
+        animate(1000 * 14) // 15秒かけて移動する。
       ]),
     ])
   ],

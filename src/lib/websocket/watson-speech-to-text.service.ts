@@ -4,7 +4,7 @@ import * as lodash from 'lodash';
 
 import { WatsonSpeechToTextStartOption } from './common';
 import { WatsonSpeechToTextService } from '../watson';
-import { GcpTranslatorService } from '../gcp';
+import { GcpTranslatorService, GcpTranslatorServiceMock } from '../gcp';
 import { SimpleStore } from '../simple-store';
 import { AppState, RecognizedObject } from '../../state';
 import { recognizedKey, transcriptKey, transcriptListKey, translatedKey, translatedListKey, socketStateKey } from '../../state';
@@ -39,7 +39,8 @@ export class WatsonSpeechToTextWebSocketService {
   constructor(
     private store: SimpleStore<AppState>,
     private recognizeService: WatsonSpeechToTextService,
-    private translateService: GcpTranslatorService,
+    // private translateService: GcpTranslatorService,
+    private translateService: GcpTranslatorServiceMock,
     @Inject(WatsonSpeechToTextStartOption) @Optional()
     private options: {} | null,
   ) {
@@ -77,13 +78,13 @@ export class WatsonSpeechToTextWebSocketService {
           const data = JSON.parse(event.data) as RecognizedObject;
           console.log('data:', data);
 
-          if (data.error) {
+          if (data.error) { // ex. in case of error -> {"error": "No speech detected for 10s."}
             this.webSocketStop();
             return;
           }
 
           if (data && data.results) {
-            this.store.setState(recognizedKey, (p) => data.state ? p : data);
+            this.store.setState(recognizedKey, (p) => data.state ? p : data); // ex. in case of state -> {"state": "listening"}
 
             if (data.results[0].final) { // 認識が完了しているかどうか。
               const transcript = data.results[0].alternatives[0].transcript.trim().replace(/^D_/, '');
