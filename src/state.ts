@@ -15,7 +15,8 @@ export const initialState: AppState = {
   translationConfig: {
     recognizeModel: 'en-US_BroadbandModel',
     translateTo: 'ja',
-  }
+  },
+  slideUrl: '',
 };
 
 
@@ -30,6 +31,7 @@ export type AppState = {
   socketState: string;
   windowState: WindowState;
   translationConfig: TranslationConfig;
+  slideUrl: string;
 };
 
 
@@ -43,6 +45,7 @@ export const microphoneStateKey = 'microphoneState';
 export const socketStateKey = 'socketState';
 export const windowStateKey = 'windowState';
 export const translationConfigKey = 'translationConfig';
+export const slideUrlKey = 'slideUrl';
 
 
 /* AppState keysと上記の文字列定義に差異がないかチェックする。 */
@@ -56,6 +59,7 @@ const __AppStateKeyValidation__: (keyof AppState)[] = [
   socketStateKey,
   windowStateKey,
   translationConfigKey,
+  slideUrlKey,
 ];
 
 

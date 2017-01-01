@@ -11,11 +11,10 @@ import { SlideComponent } from './slide.component';
 import { MeteorTowerComponent, MeteorComponent } from './meteor';
 import { FlashComponent } from './flash';
 import { LangSelectorComponent } from './lang-selector';
+import { SlideUrlComponent } from './slide-url';
 
-import { QueueConcurrent, InitialState } from '../lib/simple-store';
+import { QueueConcurrent, InitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens';
 import { initialState } from '../state';
-
-import { WatsonSpeechToTextStartOption } from '../lib/websocket';
 
 const watsonSpeechToTextStartOption = {
   'content-type': 'audio/l16;rate=16000',
@@ -39,6 +38,7 @@ const watsonSpeechToTextStartOption = {
     MeteorTowerComponent,
     FlashComponent,
     LangSelectorComponent,
+    SlideUrlComponent,
   ],
   imports: [
     BrowserModule,

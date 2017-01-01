@@ -11,15 +11,17 @@ import { WindowService } from '../lib/dom';
   selector: 'app-root',
   template: `
     <app-slide></app-slide>
-    <form class="form-inline">
+    <div class="form-inline">
       <div class="form-group col-xs-4">
         <app-microphone></app-microphone>
       </div>
-      <div class="form-group col-xs-4">
+      <div class="form-group col-xs-3">
         <app-lang-selector></app-lang-selector>
       </div>
-      <div class="offset-xs-4"></div>
-    </form>
+      <div class="form-group col-xs-5">
+        <app-slide-url></app-slide-url>
+      </div>
+    </div>
 
     <app-flash></app-flash>
     <app-meteor-tower></app-meteor-tower>

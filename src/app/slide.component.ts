@@ -1,17 +1,18 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../lib/class';
 import { SimpleStore } from '../lib/simple-store';
 import { AppState } from '../state';
-import { windowStateKey } from '../state';
+import { slideUrlKey, windowStateKey } from '../state';
 
 
 @Component({
   selector: 'app-slide',
   template: `
     <iframe 
-      src="https://docs.google.com/presentation/d/1rwmyRW99N4ZAPM5gyDGjgv0yvJXVATUom6rNxAZrYvQ/embed?start=false&loop=false&delayms=3000"
+      [src]="safeUrl"
       frameborder="0" [width]="screenWidth" [height]="screenHeight" allowfullscreen="true" 
       mozallowfullscreen="true" webkitallowfullscreen="true">
     </iframe>
@@ -21,11 +22,13 @@ import { windowStateKey } from '../state';
 export class SlideComponent extends Disposer implements OnInit, OnDestroy {
   screenWidth: number;
   screenHeight: number;
+  safeUrl: SafeResourceUrl;
 
 
   constructor(
     private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
   ) {
     super();
   }
@@ -37,6 +40,14 @@ export class SlideComponent extends Disposer implements OnInit, OnDestroy {
 
 
   private initGetState(): void {
+    this.disposable = this.store.getState()
+      .filterByUpdatedKey(slideUrlKey)
+      .subscribe(state => {
+        const url = state.slideUrl + '/embed?start=false&loop=false&delayms=3000';
+        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.cd.markForCheck();
+      });
+
     this.disposable = this.store.getState()
       .filterByUpdatedKey(windowStateKey)
       .subscribe(state => {
@@ -52,9 +63,3 @@ export class SlideComponent extends Disposer implements OnInit, OnDestroy {
   }
 
 }
-
-
-/*
-<iframe src="https://docs.google.com/presentation/d/1mumaB2_ZnQpsYquqm-iPoj_HMMbwSrpd44ynSPBfUMg/embed?start=false&loop=false&delayms=3000" 
-frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-*/

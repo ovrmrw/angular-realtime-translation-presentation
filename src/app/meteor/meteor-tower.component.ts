@@ -29,7 +29,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    this.flowTestTexts();
+    // this.flowTestTexts();
     this.initGetState();
   }
 
@@ -50,7 +50,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         this.cd.markForCheck();
 
         /* filtering array */
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 15); // 15秒後に削除する。
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 20); // 15秒後に削除する。
       });
   }
 
@@ -94,7 +94,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
         /* filtering array */
         const now = new Date().getTime();
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 15); // 15秒後に削除する。
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 20); // 15秒後に削除する。
       });
   }
 

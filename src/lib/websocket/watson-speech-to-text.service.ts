@@ -87,12 +87,15 @@ export class WatsonSpeechToTextWebSocketService {
             this.store.setState(recognizedKey, (p) => data.state ? p : data); // ex. in case of state -> {"state": "listening"}
 
             if (data.results[0].final) { // 認識が完了しているかどうか。
-              const transcript = data.results[0].alternatives[0].transcript.trim().replace(/^D_/, '');
+              const transcript = data.results[0].alternatives[0].transcript.trim()
+                .replace(/^D_/, '').replace(/%HESITATION/g, '');
 
-              this.store.setState(transcriptKey, transcript)
-                .then(s => this.store.setState(transcriptListKey, (p) => [...p, s.transcript]))
-                .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
-                .then(s => this.store.setState(translatedListKey, (p) => [...p, s.translated]));
+              if (transcript) {
+                this.store.setState(transcriptKey, transcript)
+                  .then(s => this.store.setState(transcriptListKey, (p) => [...p, s.transcript]))
+                  .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
+                  .then(s => this.store.setState(translatedListKey, (p) => [...p, s.translated]));
+              }
             }
           }
         };
