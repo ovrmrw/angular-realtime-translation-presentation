@@ -5,7 +5,7 @@ import { SimpleStore } from '../simple-store';
 import { AppState } from '../../state';
 
 
-const TRANSLATOR_URL = 'http://localhost:4000/api/microsoft/translator';
+const TRANSLATOR_URL = 'http://localhost:4000/api/mcs/translator';
 
 
 @Injectable()

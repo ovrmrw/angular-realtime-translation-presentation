@@ -23,7 +23,7 @@ const watsonSpeechToTextStartOption = {
   'word_confidence': true,
   'timestamps': true,
   // 'max_alternatives': 3,
-  'inactivity_timeout': 10, // 30,
+  'inactivity_timeout': 20, // 30,
   // 'word_alternatives_threshold': 0.001,
   'smart_formatting': true,
 };
