@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { SimpleStore } from '../simple-store';
+import { SimpleStore, replaceAction } from '../simple-store';
 import { AppState, WindowState } from '../../state';
 import { windowStateKey } from '../../state';
 
@@ -13,6 +13,11 @@ export class WindowService {
   ) {
     this.updateWindowState();
 
+    this.initObservableEvents();
+  }
+
+
+  private initObservableEvents(): void {
     Observable
       .merge(...[
         Observable.fromEvent(window, 'load'),
@@ -31,7 +36,7 @@ export class WindowService {
       innerWidth: window.innerWidth,
       innerHeight: window.innerHeight,
     };
-    this.store.setState(windowStateKey, obj);
+    this.store.setState(windowStateKey, replaceAction(obj));
   }
 
 }

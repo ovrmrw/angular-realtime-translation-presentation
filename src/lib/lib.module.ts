@@ -6,6 +6,7 @@ import { WatsonModule } from './watson';
 import { GcpModule } from './gcp';
 import { SimpleStoreModule } from './simple-store';
 import { DomModule } from './dom';
+import { McsModule } from './mcs';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { DomModule } from './dom';
     GcpModule,
     SimpleStoreModule,
     DomModule,
+    McsModule,
   ]
 })
 export class LibModule { }

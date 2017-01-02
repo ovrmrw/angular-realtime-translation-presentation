@@ -13,8 +13,9 @@ export const initialState: AppState = {
     innerHeight: 0,
   },
   translationConfig: {
-    recognizeModel: 'en-US_BroadbandModel',
-    translateTo: 'ja',
+    recognizeModel: '', // 'en-US_BroadbandModel',
+    translateTo: '', // ja',
+    engine: '', // 'gcp',
   },
   slideUrl: '',
 };
@@ -99,4 +100,5 @@ export interface WindowState {
 export interface TranslationConfig {
   recognizeModel: string;
   translateTo: string;
+  engine: string;
 }

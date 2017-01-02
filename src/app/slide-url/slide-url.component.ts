@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs';
 
 import { Disposer } from '../../lib/class';
-import { SimpleStore } from '../../lib/simple-store';
+import { SimpleStore, replaceAction } from '../../lib/simple-store';
 import { AppState } from '../../state';
 import { slideUrlKey } from '../../state';
 
@@ -33,7 +33,7 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
 
     const slideUrl = localStorage.getItem('slideUrl');
     if (slideUrl) {
-      this.store.setState(slideUrlKey, slideUrl)
+      this.store.setState(slideUrlKey, replaceAction(slideUrl))
         .then(() => {
           this.url = slideUrl;
           this.cd.markForCheck();
@@ -46,7 +46,7 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
     this.disposable = Observable.fromEvent<KeyboardEvent>(this.el.nativeElement, 'keyup')
       .debounceTime(200)
       .subscribe(event => {
-        this.store.setState(slideUrlKey, this.url)
+        this.store.setState(slideUrlKey, replaceAction(this.url))
           .then(() => localStorage.setItem('slideUrl', this.url));
       });
   }

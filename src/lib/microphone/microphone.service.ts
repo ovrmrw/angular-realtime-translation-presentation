@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { WatsonSpeechToTextWebSocketService } from '../websocket';
 const Microphone = require('./ibm/Microphone'); // written by IBM
 
-import { SimpleStore } from '../simple-store';
+import { SimpleStore, replaceAction } from '../simple-store';
 import { AppState, MicrophoneState } from '../../state';
 import { microphoneStateKey, socketStateKey } from '../../state';
 
@@ -68,7 +68,7 @@ export class MicrophoneService {
           };
           this.mic.record();
           this.running = true;
-          this.store.setState(microphoneStateKey, { isActive: this.running } as MicrophoneState);
+          this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }));
         } else {
           console.log('recording is already running.');
         }
@@ -85,7 +85,7 @@ export class MicrophoneService {
       this.mic = null;
     }
     this.running = false;
-    this.store.setState(microphoneStateKey, { isActive: this.running } as MicrophoneState);
+    this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }));
   }
 
 }

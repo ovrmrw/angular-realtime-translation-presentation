@@ -13,7 +13,7 @@ import { FlashComponent } from './flash';
 import { LangSelectorComponent } from './lang-selector';
 import { SlideUrlComponent } from './slide-url';
 
-import { QueueConcurrent, InitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens';
+import { StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens';
 import { initialState } from '../state';
 
 const watsonSpeechToTextStartOption = {
@@ -47,8 +47,8 @@ const watsonSpeechToTextStartOption = {
     LibModule,
   ],
   providers: [
-    { provide: QueueConcurrent, useValue: 99 },
-    { provide: InitialState, useValue: initialState },
+    { provide: StoreQueueConcurrent, useValue: 99 },
+    { provide: StoreInitialState, useValue: initialState },
     { provide: WatsonSpeechToTextStartOption, useValue: watsonSpeechToTextStartOption },
   ],
   bootstrap: [AppComponent]
