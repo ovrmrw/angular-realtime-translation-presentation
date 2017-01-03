@@ -1,39 +1,39 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core'
 
-import { MicrophoneService } from '../../lib/microphone';
-import { SimpleStore, replaceAction } from '../../lib/simple-store';
-import { AppState, TranslationConfig } from '../../state';
-import { translationConfigKey } from '../../state';
+import { MicrophoneService } from '../../lib/microphone'
+import { SimpleStore, replaceAction } from '../../lib/simple-store'
+import { AppState, TranslationConfig } from '../../state'
+import { translationConfigKey } from '../../state'
 
 
-const EnToJaGcp = 'en -> ja (GCP)';
-const JaToEnGcp = 'ja -> en (GCP)';
-const EnToJaMcs = 'en -> ja (MCS)';
-const JaToEnMcs = 'ja -> en (MCS)';
+const EnToJaGcp = 'en -> ja (GCP)'
+const JaToEnGcp = 'ja -> en (GCP)'
+const EnToJaMcs = 'en -> ja (MCS)'
+const JaToEnMcs = 'ja -> en (MCS)'
 
 const EnToJaGcpConfig: TranslationConfig = {
   recognizeModel: 'en-US_BroadbandModel',
   translateTo: 'ja',
   engine: 'gcp',
-};
+}
 
 const JaToEnGcpConfig: TranslationConfig = {
   recognizeModel: 'ja-JP_BroadbandModel',
   translateTo: 'en',
   engine: 'gcp',
-};
+}
 
 const EnToJaMcsConfig: TranslationConfig = {
   recognizeModel: 'en-US_BroadbandModel',
   translateTo: 'ja',
   engine: 'mcs',
-};
+}
 
 const JaToEnMcsConfig: TranslationConfig = {
   recognizeModel: 'ja-JP_BroadbandModel',
   translateTo: 'en',
   engine: 'mcs',
-};
+}
 
 
 @Component({
@@ -47,7 +47,7 @@ const JaToEnMcsConfig: TranslationConfig = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LangSelectorComponent implements OnInit {
-  langs = [EnToJaMcs, JaToEnMcs, EnToJaGcp, JaToEnGcp];
+  langs = [EnToJaMcs, JaToEnMcs, EnToJaGcp, JaToEnGcp]
 
 
   constructor(
@@ -57,27 +57,27 @@ export class LangSelectorComponent implements OnInit {
 
 
   ngOnInit() {
-    this.setTranslationConfig(this.langs[0]);
+    this.setTranslationConfig(this.langs[0])
   }
 
 
   onChanged(event: Event): void {
-    // console.log('onChanged', event.target['value']);
-    const selected: string = event.target['value'];
-    this.setTranslationConfig(selected);
-    this.micService.stop(); // 言語切り替えをしたときはマイクを止める。
+    // console.log('onChanged', event.target['value'])
+    const selected: string = event.target['value']
+    this.setTranslationConfig(selected)
+    this.micService.stop() // 言語切り替えをしたときはマイクを止める。
   }
 
 
   setTranslationConfig(selected: string): void {
     if (selected === EnToJaGcp) {
-      this.store.setState(translationConfigKey, replaceAction(EnToJaGcpConfig));
+      this.store.setState(translationConfigKey, replaceAction(EnToJaGcpConfig))
     } else if (selected === JaToEnGcp) {
-      this.store.setState(translationConfigKey, replaceAction(JaToEnGcpConfig));
+      this.store.setState(translationConfigKey, replaceAction(JaToEnGcpConfig))
     } else if (selected === EnToJaMcs) {
-      this.store.setState(translationConfigKey, replaceAction(EnToJaMcsConfig));
+      this.store.setState(translationConfigKey, replaceAction(EnToJaMcsConfig))
     } else if (selected === JaToEnMcs) {
-      this.store.setState(translationConfigKey, replaceAction(JaToEnMcsConfig));
+      this.store.setState(translationConfigKey, replaceAction(JaToEnMcsConfig))
     }
   }
 

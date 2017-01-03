@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ElementRef } from '@angular/core'
+import { Observable } from 'rxjs'
 
-import { Disposer } from '../../lib/class';
-import { SimpleStore, replaceAction } from '../../lib/simple-store';
-import { AppState } from '../../state';
-import { slideUrlKey } from '../../state';
+import { Disposer } from '../../lib/class'
+import { SimpleStore, replaceAction } from '../../lib/simple-store'
+import { AppState } from '../../state'
+import { slideUrlKey } from '../../state'
 
 
 @Component({
@@ -16,7 +16,7 @@ import { slideUrlKey } from '../../state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
-  url: string = '';
+  url: string = ''
 
 
   constructor(
@@ -24,20 +24,20 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private el: ElementRef,
   ) {
-    super();
+    super()
   }
 
 
   ngOnInit() {
-    this.initObservableEvents();
+    this.initObservableEvents()
 
-    const slideUrl = localStorage.getItem('slideUrl');
+    const slideUrl = localStorage.getItem('slideUrl')
     if (slideUrl) {
       this.store.setState(slideUrlKey, replaceAction(slideUrl))
         .then(() => {
-          this.url = slideUrl;
-          this.cd.markForCheck();
-        });
+          this.url = slideUrl
+          this.cd.markForCheck()
+        })
     }
   }
 
@@ -47,13 +47,13 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
       .debounceTime(200)
       .subscribe(event => {
         this.store.setState(slideUrlKey, replaceAction(this.url))
-          .then(() => localStorage.setItem('slideUrl', this.url));
-      });
+          .then(() => localStorage.setItem('slideUrl', this.url))
+      })
   }
 
 
   ngOnDestroy() {
-    this.disposeSubscriptions();
+    this.disposeSubscriptions()
   }
 
 }

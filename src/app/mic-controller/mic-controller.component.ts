@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core'
 
-import { Disposer } from '../../lib/class';
-import { MicrophoneService } from '../../lib/microphone';
-import { SimpleStore } from '../../lib/simple-store';
-import { AppState } from '../../state';
-import { microphoneStateKey } from '../../state';
+import { Disposer } from '../../lib/class'
+import { MicrophoneService } from '../../lib/microphone'
+import { SimpleStore } from '../../lib/simple-store'
+import { AppState } from '../../state'
+import { microphoneStateKey } from '../../state'
 
 
 @Component({
@@ -18,7 +18,7 @@ import { microphoneStateKey } from '../../state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MicControllerComponent extends Disposer implements OnInit, OnDestroy {
-  isActive: boolean;
+  isActive: boolean
 
 
   constructor(
@@ -26,12 +26,12 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
     private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) {
-    super();
+    super()
   }
 
 
   ngOnInit() {
-    this.initGetState();
+    this.initGetState()
   }
 
 
@@ -39,24 +39,24 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
     this.disposable = this.store.getState()
       .filterByUpdatedKey(microphoneStateKey)
       .subscribe(state => {
-        this.isActive = state.microphoneState.isActive;
-        this.cd.markForCheck();
-      });
+        this.isActive = state.microphoneState.isActive
+        this.cd.markForCheck()
+      })
   }
 
 
   ngOnDestroy() {
-    this.disposeSubscriptions();
+    this.disposeSubscriptions()
   }
 
 
   record() {
-    this.microphoneService.record();
+    this.microphoneService.record()
   }
 
 
   stop() {
-    this.microphoneService.stop();
+    this.microphoneService.stop()
   }
 
 }

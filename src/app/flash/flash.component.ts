@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core'
+import { Observable } from 'rxjs'
 
-import { Disposer } from '../../lib/class';
-import { SimpleStore } from '../../lib/simple-store';
-import { AppState } from '../../state';
-import { recognizedKey } from '../../state';
+import { Disposer } from '../../lib/class'
+import { SimpleStore } from '../../lib/simple-store'
+import { AppState } from '../../state'
+import { recognizedKey } from '../../state'
 
 
 @Component({
@@ -16,19 +16,19 @@ import { recognizedKey } from '../../state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlashComponent extends Disposer implements OnInit, OnDestroy {
-  text: string = '';
+  text: string = ''
 
 
   constructor(
     private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
   ) {
-    super();
+    super()
   }
 
 
   ngOnInit() {
-    this.initGetState();
+    this.initGetState()
   }
 
 
@@ -37,17 +37,17 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
       .filterByUpdatedKey(recognizedKey)
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
-          this.text = state.recognized.results[0].alternatives[0].transcript;
+          this.text = state.recognized.results[0].alternatives[0].transcript
         } else {
-          this.text = '';
+          this.text = ''
         }
-        this.cd.markForCheck();
-      });
+        this.cd.markForCheck()
+      })
   }
 
 
   ngOnDestroy() {
-    this.disposeSubscriptions();
+    this.disposeSubscriptions()
   }
 
 }

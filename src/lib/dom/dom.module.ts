@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
 
-import { WindowService } from './window.service';
+import { WindowService } from './window.service'
 
 
 @NgModule({

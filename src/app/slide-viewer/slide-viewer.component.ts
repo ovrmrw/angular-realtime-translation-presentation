@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core'
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
+import { Observable } from 'rxjs'
 
-import { Disposer } from '../../lib/class';
-import { SimpleStore } from '../../lib/simple-store';
-import { AppState } from '../../state';
-import { slideUrlKey, windowStateKey } from '../../state';
+import { Disposer } from '../../lib/class'
+import { SimpleStore } from '../../lib/simple-store'
+import { AppState } from '../../state'
+import { slideUrlKey, windowStateKey } from '../../state'
 
 
 @Component({
@@ -20,9 +20,9 @@ import { slideUrlKey, windowStateKey } from '../../state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy {
-  screenWidth: number;
-  screenHeight: number;
-  safeUrl: SafeResourceUrl;
+  screenWidth: number
+  screenHeight: number
+  safeUrl: SafeResourceUrl
 
 
   constructor(
@@ -30,12 +30,12 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
     private cd: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
   ) {
-    super();
+    super()
   }
 
 
   ngOnInit() {
-    this.initGetState();
+    this.initGetState()
   }
 
 
@@ -43,23 +43,23 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
     this.disposable = this.store.getState()
       .filterByUpdatedKey(slideUrlKey)
       .subscribe(state => {
-        const url = state.slideUrl + '/embed?start=false&loop=false&delayms=3000';
-        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-        this.cd.markForCheck();
-      });
+        const url = state.slideUrl + '/embed?start=false&loop=false&delayms=3000'
+        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+        this.cd.markForCheck()
+      })
 
     this.disposable = this.store.getState()
       .filterByUpdatedKey(windowStateKey)
       .subscribe(state => {
-        this.screenWidth = state.windowState.innerWidth;
-        this.screenHeight = state.windowState.innerHeight - 50;
-        this.cd.markForCheck();
-      });
+        this.screenWidth = state.windowState.innerWidth
+        this.screenHeight = state.windowState.innerHeight - 50
+        this.cd.markForCheck()
+      })
   }
 
 
   ngOnDestroy() {
-    this.disposeSubscriptions();
+    this.disposeSubscriptions()
   }
 
 }

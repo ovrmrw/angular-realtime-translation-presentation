@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ElementRef } from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input, OnInit, ElementRef } from '@angular/core'
+import { trigger, state, style, animate, transition } from '@angular/core'
+import { Observable } from 'rxjs'
 
 
 @Component({
@@ -26,12 +26,12 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeteorComponent implements OnInit {
-  @Input() text: string;
-  @Input() top: number;
-  @Input() index: number;
-  @Input() color: string;
-  startPosition: number;
-  opacity: number = 1;
+  @Input() text: string
+  @Input() top: number
+  @Input() index: number
+  @Input() color: string
+  startPosition: number
+  opacity: number = 1
 
 
   constructor(
@@ -40,12 +40,12 @@ export class MeteorComponent implements OnInit {
 
 
   ngOnInit() {
-    this.startPosition = window.innerWidth - (window.innerWidth / 5);
+    this.startPosition = window.innerWidth - (window.innerWidth / 5)
   }
 
 
   onClick(): void {
-    this.opacity = 0;
+    this.opacity = 0
   }
 
 }

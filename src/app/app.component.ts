@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core'
 
-import { SimpleStore } from '../lib/simple-store';
-import { AppState } from '../state';
-import { Disposer } from '../lib/class';
-import { WatsonSpeechToTextService } from '../lib/watson';
-import { WindowService } from '../lib/dom';
+import { SimpleStore } from '../lib/simple-store'
+import { AppState } from '../state'
+import { Disposer } from '../lib/class'
+import { WatsonSpeechToTextService } from '../lib/watson'
+import { WindowService } from '../lib/dom'
 
 
 @Component({
@@ -35,7 +35,7 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private __windowService: WindowService,
   ) {
-    super();
+    super()
   }
 
 
@@ -45,7 +45,7 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.disposeSubscriptions();
+    this.disposeSubscriptions()
   }
 
 }

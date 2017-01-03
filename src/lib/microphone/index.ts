@@ -1,2 +1,2 @@
-export * from './microphone.module';
-export * from './microphone.service';
+export * from './microphone.module'
+export * from './microphone.service'

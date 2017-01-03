@@ -5,4 +5,4 @@ export const firebaseConfig = {
   databaseURL: 'https://fir-as-a-store-2.firebaseio.com',
   // storageBucket: "fir-as-a-store-2.appspot.com",
   // messagingSenderId: "983094407916"
-};
+}

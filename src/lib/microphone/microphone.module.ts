@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
 
-import { MicrophoneService } from './microphone.service';
+import { MicrophoneService } from './microphone.service'
 
 
 @NgModule({

@@ -1,38 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core'
 
-import { WatsonSpeechToTextWebSocketService } from '../websocket';
-const Microphone = require('./ibm/Microphone'); // written by IBM
+import { WatsonSpeechToTextWebSocketService } from '../websocket'
+const Microphone = require('./ibm/Microphone') // written by IBM
 
-import { SimpleStore, replaceAction } from '../simple-store';
-import { AppState, MicrophoneState } from '../../state';
-import { microphoneStateKey, socketStateKey } from '../../state';
+import { SimpleStore, replaceAction } from '../simple-store'
+import { AppState, MicrophoneState } from '../../state'
+import { microphoneStateKey, socketStateKey } from '../../state'
 
 
-const AudioCtx = window.AudioContext;
-let audioContext: AudioContext;
+const AudioCtx = window.AudioContext
+let audioContext: AudioContext
 if (AudioCtx) {
-  audioContext = new AudioCtx(); // AudioContextはここで一回だけ生成する。
+  audioContext = new AudioCtx() // AudioContextはここで一回だけ生成する。
 } else {
-  throw new Error('AudioContext is not found on window object.');
+  throw new Error('AudioContext is not found on window object.')
 }
 
 const MIC_OPTIONS = {
   bufferSize: 8192,
   audioContext,
-};
+}
 
 
 @Injectable()
 export class MicrophoneService {
-  private running: boolean;
-  private mic: any;
+  private running: boolean
+  private mic: any
 
 
   constructor(
     private recognizeService: WatsonSpeechToTextWebSocketService,
     private store: SimpleStore<AppState>,
   ) {
-    this.initGetState();
+    this.initGetState()
   }
 
 
@@ -41,51 +41,51 @@ export class MicrophoneService {
       .filterByUpdatedKey(socketStateKey)
       .subscribe(state => {
         if (this.running && (state.socketState === 'error' || state.socketState === 'close')) {
-          this.stop();
+          this.stop()
         }
-      });
+      })
   }
 
 
   get ws(): WebSocket | null {
-    return this.recognizeService.getWebSocketInstance();
+    return this.recognizeService.getWebSocketInstance()
   }
 
 
   record(): void {
-    this.stop();
+    this.stop()
 
-    console.log('Starting WebSocket');
+    console.log('Starting WebSocket')
     this.recognizeService.webSocketStart()
       .then(() => {
         if (!this.running) {
-          console.log('Starting microphone');
-          this.mic = new Microphone(MIC_OPTIONS);
+          console.log('Starting microphone')
+          this.mic = new Microphone(MIC_OPTIONS)
           this.mic.onAudio = (blob: Blob) => {
             if (this.ws && this.ws.readyState < 2) {
-              this.ws.send(blob);
+              this.ws.send(blob)
             }
-          };
-          this.mic.record();
-          this.running = true;
-          this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }));
+          }
+          this.mic.record()
+          this.running = true
+          this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }))
         } else {
-          console.log('recording is already running.');
+          console.log('recording is already running.')
         }
-      });
+      })
   }
 
 
   stop(): void {
-    console.log('Stopping microphone, sending stop action message');
-    this.recognizeService.webSocketStop();
+    console.log('Stopping microphone, sending stop action message')
+    this.recognizeService.webSocketStop()
     if (this.mic) {
-      this.mic.onAudio = () => { };
-      this.mic.stop();
-      this.mic = null;
+      this.mic.onAudio = () => { }
+      this.mic.stop()
+      this.mic = null
     }
-    this.running = false;
-    this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }));
+    this.running = false
+    this.store.setState(microphoneStateKey, replaceAction({ isActive: this.running }))
   }
 
 }

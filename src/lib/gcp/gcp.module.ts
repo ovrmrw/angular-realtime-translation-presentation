@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
 
-import { GcpTranslatorService } from './translator.service';
-import { GcpTranslatorServiceMock } from './translator.service.mock';
+import { GcpTranslatorService } from './translator.service'
+import { GcpTranslatorServiceMock } from './translator.service.mock'
 
 
 @NgModule({

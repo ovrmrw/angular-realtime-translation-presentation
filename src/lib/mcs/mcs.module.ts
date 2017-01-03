@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
 
-import { McsTranslatorTextService } from './translator-text.service';
-import { McsTranslatorTextServiceMock } from './translator-text.service.mock';
+import { McsTranslatorTextService } from './translator-text.service'
+import { McsTranslatorTextServiceMock } from './translator-text.service.mock'
 
 
 @NgModule({

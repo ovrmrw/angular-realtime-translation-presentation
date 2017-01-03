@@ -1,6 +1,6 @@
-import { NgModule, OpaqueToken } from '@angular/core';
+import { NgModule, OpaqueToken } from '@angular/core'
 
-import { WatsonSpeechToTextWebSocketService } from './watson-speech-to-text.service';
+import { WatsonSpeechToTextWebSocketService } from './watson-speech-to-text.service'
 
 
 @NgModule({

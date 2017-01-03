@@ -1,4 +1,4 @@
-import { OpaqueToken } from '@angular/core';
+import { OpaqueToken } from '@angular/core'
 
 
-export const WatsonSpeechToTextStartOption = new OpaqueToken('WatsonSpeechToTextStartOption');
+export const WatsonSpeechToTextStartOption = new OpaqueToken('WatsonSpeechToTextStartOption')

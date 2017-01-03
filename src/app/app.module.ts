@@ -1,23 +1,23 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser'
+import { NgModule } from '@angular/core'
+import { FormsModule } from '@angular/forms'
+import { HttpModule } from '@angular/http'
 
-import { LibModule } from '../lib/lib.module';
+import { LibModule } from '../lib/lib.module'
 
-import { AppComponent } from './app.component';
-import { MicControllerComponent } from './mic-controller';
-import { SlideViewerComponent } from './slide-viewer';
-import { MeteorTowerComponent, MeteorComponent } from './meteor';
-import { FlashComponent } from './flash';
-import { LangSelectorComponent } from './lang-selector';
-import { SlideUrlComponent } from './slide-url';
+import { AppComponent } from './app.component'
+import { MicControllerComponent } from './mic-controller'
+import { SlideViewerComponent } from './slide-viewer'
+import { MeteorTowerComponent, MeteorComponent } from './meteor'
+import { FlashComponent } from './flash'
+import { LangSelectorComponent } from './lang-selector'
+import { SlideUrlComponent } from './slide-url'
 
-import { StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens';
-import { initialState } from '../state';
+import { StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens'
+import { initialState } from '../state'
 
 const watsonSpeechToTextStartOption = {
-  'content-type': 'audio/l16;rate=16000',
+  'content-type': 'audio/l16rate=16000',
   'interim_results': true,
   'continuous': true,
   'word_confidence': true,
@@ -26,7 +26,7 @@ const watsonSpeechToTextStartOption = {
   'inactivity_timeout': 20, // 30,
   // 'word_alternatives_threshold': 0.001,
   'smart_formatting': true,
-};
+}
 
 
 @NgModule({
