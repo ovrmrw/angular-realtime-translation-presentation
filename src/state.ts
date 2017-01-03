@@ -23,16 +23,16 @@ export const initialState: AppState = {
 
 /* Stateの型定義。 */
 export type AppState = {
-  transcript: string;
-  translated: string;
-  transcriptList: string[];
-  translatedList: string[];
-  recognized: RecognizedObject | null;
-  microphoneState: MicrophoneState;
-  socketState: string;
-  windowState: WindowState;
-  translationConfig: TranslationConfig;
-  slideUrl: string;
+  transcript: string,
+  translated: string,
+  transcriptList: string[],
+  translatedList: string[],
+  recognized: RecognizedObject | null,
+  microphoneState: MicrophoneState,
+  socketState: string,
+  windowState: WindowState,
+  translationConfig: TranslationConfig,
+  slideUrl: string,
 };
 
 
