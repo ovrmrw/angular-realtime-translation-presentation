@@ -2,14 +2,14 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
-import { Disposer } from '../lib/class';
-import { SimpleStore } from '../lib/simple-store';
-import { AppState } from '../state';
-import { slideUrlKey, windowStateKey } from '../state';
+import { Disposer } from '../../lib/class';
+import { SimpleStore } from '../../lib/simple-store';
+import { AppState } from '../../state';
+import { slideUrlKey, windowStateKey } from '../../state';
 
 
 @Component({
-  selector: 'app-slide',
+  selector: 'app-slide-viewer',
   template: `
     <iframe 
       [src]="safeUrl"
@@ -19,7 +19,7 @@ import { slideUrlKey, windowStateKey } from '../state';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideComponent extends Disposer implements OnInit, OnDestroy {
+export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy {
   screenWidth: number;
   screenHeight: number;
   safeUrl: SafeResourceUrl;

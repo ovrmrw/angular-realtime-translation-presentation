@@ -6,8 +6,8 @@ import { HttpModule } from '@angular/http';
 import { LibModule } from '../lib/lib.module';
 
 import { AppComponent } from './app.component';
-import { MicrophoneComponent } from './microphone';
-import { SlideComponent } from './slide.component';
+import { MicControllerComponent } from './mic-controller';
+import { SlideViewerComponent } from './slide-viewer';
 import { MeteorTowerComponent, MeteorComponent } from './meteor';
 import { FlashComponent } from './flash';
 import { LangSelectorComponent } from './lang-selector';
@@ -32,8 +32,8 @@ const watsonSpeechToTextStartOption = {
 @NgModule({
   declarations: [
     AppComponent,
-    MicrophoneComponent,
-    SlideComponent,
+    MicControllerComponent,
+    SlideViewerComponent,
     MeteorComponent,
     MeteorTowerComponent,
     FlashComponent,

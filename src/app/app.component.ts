@@ -10,10 +10,10 @@ import { WindowService } from '../lib/dom';
 @Component({
   selector: 'app-root',
   template: `
-    <app-slide></app-slide>
+    <app-slide-viewer></app-slide-viewer>
     <div class="form-inline">
       <div class="form-group col-xs-4">
-        <app-microphone></app-microphone>
+        <app-mic-controller></app-mic-controller>
       </div>
       <div class="form-group col-xs-3">
         <app-lang-selector></app-lang-selector>

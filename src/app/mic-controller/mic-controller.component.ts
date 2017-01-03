@@ -8,16 +8,16 @@ import { microphoneStateKey } from '../../state';
 
 
 @Component({
-  selector: 'app-microphone',
+  selector: 'app-mic-controller',
   template: `
     <button class="btn btn-primary" (click)="record()">Mic Record</button>
     <button class="btn btn-secondary" (click)="stop()">Mic Stop</button>
     <span *ngIf="isActive" class="blinking font-active"> MIC IS ACTIVE </span>
 	`,
-  styleUrls: ['./microphone.component.css'],
+  styleUrls: ['./mic-controller.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MicrophoneComponent extends Disposer implements OnInit, OnDestroy {
+export class MicControllerComponent extends Disposer implements OnInit, OnDestroy {
   isActive: boolean;
 
 
