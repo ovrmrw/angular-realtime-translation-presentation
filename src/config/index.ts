@@ -11,7 +11,7 @@ export const storeQueueConcurrent: number = 99
 
 
 export const watsonSpeechToTextStartOption = {
-  'content-type': 'audio/l16rate=16000',
+  'content-type': 'audio/l16;rate=16000',
   'interim_results': true,
   'continuous': true,
   'word_confidence': true,

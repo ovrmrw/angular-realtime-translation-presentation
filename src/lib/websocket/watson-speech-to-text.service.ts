@@ -16,7 +16,7 @@ const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/rec
 
 const START_OPTIONS = {
   'action': 'start',
-  'content-type': 'audio/l16rate=16000',
+  'content-type': 'audio/l16;rate=16000',
   // 'interim_results': true,
   // 'continuous': true,
   // 'word_confidence': true,
