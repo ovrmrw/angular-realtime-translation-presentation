@@ -12,32 +12,28 @@ const JaToEnGcp = 'ja -> en (GCP)'
 const EnToJaMcs = 'en -> ja (MCS)'
 const JaToEnMcs = 'ja -> en (MCS)'
 
-const EnToJaGcpConfig: TranslationConfig = {
+const EnToJaGcpConfig: Partial<TranslationConfig> = {
   recognizeModel: 'en-US_BroadbandModel',
   translateTo: 'ja',
   engine: 'gcp',
-  translatorUrl: '',
 }
 
-const JaToEnGcpConfig: TranslationConfig = {
+const JaToEnGcpConfig: Partial<TranslationConfig> = {
   recognizeModel: 'ja-JP_BroadbandModel',
   translateTo: 'en',
   engine: 'gcp',
-  translatorUrl: '',
 }
 
-const EnToJaMcsConfig: TranslationConfig = {
+const EnToJaMcsConfig: Partial<TranslationConfig> = {
   recognizeModel: 'en-US_BroadbandModel',
   translateTo: 'ja',
   engine: 'mcs',
-  translatorUrl: '',
 }
 
-const JaToEnMcsConfig: TranslationConfig = {
+const JaToEnMcsConfig: Partial<TranslationConfig> = {
   recognizeModel: 'ja-JP_BroadbandModel',
   translateTo: 'en',
   engine: 'mcs',
-  translatorUrl: '',
 }
 
 
@@ -91,16 +87,18 @@ export class LangSelectorComponent implements OnInit {
   }
 
 
-  mergeUrl(obj: TranslationConfig): TranslationConfig {
-    if (obj.engine.toUpperCase() === 'GCP') {
-      obj.translatorUrl = this.gcpTranslatorUrl
-    } else if (obj.engine.toUpperCase() === 'MCS') {
-      obj.translatorUrl = this.mcsTranslatorUrl
+  mergeUrl(obj: Partial<TranslationConfig>): TranslationConfig | never {
+    if (obj.engine) {
+      if (obj.engine.toUpperCase() === 'GCP') {
+        obj.translatorUrl = this.gcpTranslatorUrl
+      } else if (obj.engine.toUpperCase() === 'MCS') {
+        obj.translatorUrl = this.mcsTranslatorUrl
+      }
     }
     if (!obj.translatorUrl) {
       throw new Error('translatorUrl is not defined.')
     }
-    return obj
+    return obj as TranslationConfig
   }
 
 }

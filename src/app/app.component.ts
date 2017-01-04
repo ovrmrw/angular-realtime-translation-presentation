@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core'
 
+import { Disposer } from '../lib/class'
 import { SimpleStore } from '../lib/simple-store'
 import { AppState } from '../state'
-import { Disposer } from '../lib/class'
-import { WatsonSpeechToTextService } from '../lib/watson'
-import { WindowService } from '../lib/dom'
+import { WindowService } from '../lib/dom';
 
 
 @Component({

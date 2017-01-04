@@ -76,8 +76,8 @@ export class SimpleStore<T> {
   }
 
 
-  setState<K extends keyof T>(key: K, value: ValueOrResolver<T, K>): Promise<T> {
-    const subject = new Subject<T>()
+  setState<K extends keyof T>(key: K, value: ValueOrResolver<T, K>): Promise<RecursiveReadonly<T>> {
+    const subject = new Subject<T | RecursiveReadonly<T>>()
     this.simpleStore$.next({ key, value, subject })
     return subject.take(1).toPromise()
   }

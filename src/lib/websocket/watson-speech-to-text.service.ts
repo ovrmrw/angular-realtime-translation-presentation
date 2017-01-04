@@ -136,7 +136,7 @@ export class WatsonSpeechToTextWebSocketService {
   }
 
 
-  getWebSocketInstance(): WebSocket | null {
+  getWebSocketInstance(): Readonly<WebSocket> | null {
     return this.ws
   }
 

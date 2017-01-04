@@ -12,7 +12,6 @@ export class WindowService {
     private store: SimpleStore<AppState>,
   ) {
     this.updateWindowState()
-
     this.initObservableEvents()
   }
 
@@ -31,7 +30,7 @@ export class WindowService {
   }
 
 
-  updateWindowState(): void {
+  private updateWindowState(): void {
     const obj: WindowState = {
       innerWidth: window.innerWidth,
       innerHeight: window.innerHeight,

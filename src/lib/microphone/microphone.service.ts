@@ -18,6 +18,8 @@ if (AudioCtx) {
 
 const MIC_OPTIONS = {
   bufferSize: 8192,
+  inputChannels: 1,
+  outputChannels: 1,
   audioContext,
 }
 
@@ -47,7 +49,7 @@ export class MicrophoneService {
   }
 
 
-  get ws(): WebSocket | null {
+  get ws() {
     return this.recognizeService.getWebSocketInstance()
   }
 
