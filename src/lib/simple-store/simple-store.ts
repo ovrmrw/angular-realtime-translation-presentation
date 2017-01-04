@@ -83,13 +83,19 @@ export class SimpleStore<T> {
   }
 
 
-  getState(): Observable<T> {
+  getState(): Observable<Readonly<T>> {
     return this.provider$
   }
 
 
-  getStateAsPromise(): Promise<T> {
+  getStateAsPromise(): Promise<Readonly<T>> {
     return this.provider$.take(1).toPromise()
   }
 
+}
+
+
+
+type Readonly<T> = {
+  readonly[P in keyof T]: T[P]
 }
