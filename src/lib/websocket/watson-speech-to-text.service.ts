@@ -4,8 +4,9 @@ import * as lodash from 'lodash'
 
 import { WatsonSpeechToTextStartOption } from './common'
 import { WatsonSpeechToTextService } from '../watson'
-import { GcpTranslatorService, GcpTranslatorServiceMock } from '../gcp'
-import { McsTranslatorTextService, McsTranslatorTextServiceMock } from '../mcs'
+// import { GcpTranslatorService, GcpTranslatorServiceMock } from '../gcp'
+// import { McsTranslatorTextService, McsTranslatorTextServiceMock } from '../mcs'
+import { TranslatorService } from '../translator';
 import { SimpleStore, replaceAction, pushArrayAction } from '../simple-store'
 import { AppState, RecognizedObject } from '../../state'
 import { recognizedKey, transcriptKey, transcriptListKey, translatedKey, translatedListKey, socketStateKey } from '../../state'
@@ -40,9 +41,7 @@ export class WatsonSpeechToTextWebSocketService {
   constructor(
     private store: SimpleStore<AppState>,
     private recognizeService: WatsonSpeechToTextService,
-    private gcpTranslateService: GcpTranslatorService,
-    private gcpTranslateServiceMock: GcpTranslatorServiceMock,
-    private mcsTranslateService: McsTranslatorTextService,
+    private translateService: TranslatorService,
     @Inject(WatsonSpeechToTextStartOption) @Optional()
     private options: {} | null,
   ) {
@@ -68,7 +67,7 @@ export class WatsonSpeechToTextWebSocketService {
   webSocketStart(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       const token = await this.recognizeService.requestToken()
-      const state = await this.store.getState().take(1).toPromise()
+      const state = await this.store.getStateAsPromise()
       const model = state.translationConfig.recognizeModel
 
       if (!this.ws && token && model) {
@@ -89,21 +88,13 @@ export class WatsonSpeechToTextWebSocketService {
             this.store.setState(recognizedKey, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
 
             if (data.results[0].final) { // 認識が完了しているかどうか。
-              const transcript = data.results[0].alternatives[0].transcript.trim()
-                .replace(/^D_/, '').replace(/%HESITATION/g, '')
+              const transcript = data.results[0].alternatives[0].transcript
+                .trim().replace(/^D_/, '').replace(/%HESITATION/g, '')
 
               if (transcript) {
                 this.store.setState(transcriptKey, replaceAction(transcript))
                   .then(s => this.store.setState(transcriptListKey, pushArrayAction(s.transcript)))
-                  .then(s => {
-                    if (s.translationConfig.engine === 'gcp') {
-                      return this.store.setState(translatedKey, this.gcpTranslateService.requestTranslate(transcript))
-                    } else if (s.translationConfig.engine === 'mcs') {
-                      return this.store.setState(translatedKey, this.mcsTranslateService.requestTranslate(transcript))
-                    } else {
-                      return this.store.setState(translatedKey, this.gcpTranslateServiceMock.requestTranslate(transcript))
-                    }
-                  })
+                  .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
                   .then(s => this.store.setState(translatedListKey, pushArrayAction(s.translated)))
               }
             }

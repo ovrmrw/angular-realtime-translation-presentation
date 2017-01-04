@@ -17,13 +17,13 @@ export class GcpTranslatorService {
 
 
   async requestTranslate(text: string): Promise<string> {
-    const state = await this.store.getState().take(1).toPromise()
+    const state = await this.store.getStateAsPromise()
     const payload: Payload = {
       translateTo: state.translationConfig.translateTo,
       text,
     }
     const result = await this.http.post(TRANSLATOR_URL, payload)
-      .map(res => res.json() as TranslationObect)
+      .map(res => res.json() as TranslationObject)
       .map(obj => obj.translation)
       .toPromise()
     return result
@@ -39,6 +39,6 @@ interface Payload {
 }
 
 
-interface TranslationObect {
+interface TranslationObject {
   translation: string
 }

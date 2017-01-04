@@ -13,20 +13,16 @@ import { FlashComponent } from './flash'
 import { LangSelectorComponent } from './lang-selector'
 import { SlideUrlComponent } from './slide-url'
 
-import { StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption } from '../opaque-tokens'
 import { initialState } from '../state'
+import {
+  StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption,
+  GcpTranslatorUrl, McsTranslatorUrl, UseMockTranslator,
+} from '../opaque-tokens'
+import {
+  storeQueueConcurrent, watsonSpeechToTextStartOption,
+  gcpTranslatorUrl, mcsTranslatorUrl, useMockTranslator,
+} from '../config';
 
-const watsonSpeechToTextStartOption = {
-  'content-type': 'audio/l16rate=16000',
-  'interim_results': true,
-  'continuous': true,
-  'word_confidence': true,
-  'timestamps': true,
-  // 'max_alternatives': 3,
-  'inactivity_timeout': 20, // 30,
-  // 'word_alternatives_threshold': 0.001,
-  'smart_formatting': true,
-}
 
 
 @NgModule({
@@ -47,9 +43,12 @@ const watsonSpeechToTextStartOption = {
     LibModule,
   ],
   providers: [
-    { provide: StoreQueueConcurrent, useValue: 99 },
+    { provide: StoreQueueConcurrent, useValue: storeQueueConcurrent },
     { provide: StoreInitialState, useValue: initialState },
     { provide: WatsonSpeechToTextStartOption, useValue: watsonSpeechToTextStartOption },
+    { provide: GcpTranslatorUrl, useValue: gcpTranslatorUrl },
+    { provide: McsTranslatorUrl, useValue: mcsTranslatorUrl },
+    { provide: UseMockTranslator, useValue: useMockTranslator },
   ],
   bootstrap: [AppComponent]
 })

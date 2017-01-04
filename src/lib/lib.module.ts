@@ -3,10 +3,11 @@ import { NgModule } from '@angular/core'
 import { WebSocketModule } from './websocket'
 import { MicrophoneModule } from './microphone'
 import { WatsonModule } from './watson'
-import { GcpModule } from './gcp'
+// import { GcpModule } from './gcp'
 import { SimpleStoreModule } from './simple-store'
 import { DomModule } from './dom'
-import { McsModule } from './mcs'
+// import { McsModule } from './mcs'
+import { TranslatorModule } from './translator';
 
 
 @NgModule({
@@ -14,10 +15,11 @@ import { McsModule } from './mcs'
     WebSocketModule,
     MicrophoneModule,
     WatsonModule,
-    GcpModule,
+    // GcpModule,
     SimpleStoreModule,
     DomModule,
-    McsModule,
+    // McsModule,
+    TranslatorModule,
   ]
 })
 export class LibModule { }

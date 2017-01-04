@@ -43,11 +43,14 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
 
 
   private initObservableEvents(): void {
-    this.disposable = Observable.fromEvent<KeyboardEvent>(this.el.nativeElement, 'keyup')
+    this.disposable = Observable.fromEvent(this.el.nativeElement, 'keyup')
       .debounceTime(200)
       .subscribe(event => {
         this.store.setState(slideUrlKey, replaceAction(this.url))
-          .then(() => localStorage.setItem('slideUrl', this.url))
+          .then(() => {
+            localStorage.setItem('slideUrl', this.url)
+            // this.cd.markForCheck()            
+          })
       })
   }
 

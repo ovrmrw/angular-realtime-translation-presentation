@@ -87,4 +87,9 @@ export class SimpleStore<T> {
     return this.provider$
   }
 
+
+  getStateAsPromise(): Promise<T> {
+    return this.provider$.take(1).toPromise()
+  }
+
 }

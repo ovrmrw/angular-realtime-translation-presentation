@@ -16,6 +16,7 @@ export const initialState: AppState = {
     recognizeModel: '', // 'en-US_BroadbandModel',
     translateTo: '', // ja',
     engine: '', // 'gcp',
+    translatorUrl: '',
   },
   slideUrl: '',
 }
@@ -23,16 +24,16 @@ export const initialState: AppState = {
 
 /* Stateの型定義。 */
 export interface AppState {
-  transcript: string,
-  translated: string,
-  transcriptList: string[],
-  translatedList: string[],
-  recognized: RecognizedObject | null,
-  microphoneState: MicrophoneState,
-  socketState: string,
-  windowState: WindowState,
-  translationConfig: TranslationConfig,
-  slideUrl: string,
+  transcript: string
+  translated: string
+  transcriptList: string[]
+  translatedList: string[]
+  recognized: RecognizedObject | null
+  microphoneState: MicrophoneState
+  socketState: string
+  windowState: WindowState
+  translationConfig: TranslationConfig
+  slideUrl: string
 }
 
 
@@ -65,40 +66,41 @@ const __AppStateKeyValidation__: Array<keyof AppState> = [
 
 
 export interface MicrophoneState {
-  isActive: boolean,
+  isActive: boolean
 }
 
 
 export interface RecognizedObject {
-  result_index: number,
-  results: RecognizedResult[],
-  state?: string,
-  error?: string,
+  result_index: number
+  results: RecognizedResult[]
+  state?: string
+  error?: string
 }
 
 
 export interface RecognizedResult {
-  alternatives: RecognizedAlternative[],
-  final: boolean,
+  alternatives: RecognizedAlternative[]
+  final: boolean
 }
 
 
 export interface RecognizedAlternative {
-  transcript: string,
-  confidence?: number,
-  word_confidence?: Array<string | number>[], // 配列の配列
-  timestamp?: Array<string | number>[], // 配列の配列
+  transcript: string
+  confidence?: number
+  word_confidence?: Array<string | number>[] // 配列の配列
+  timestamp?: Array<string | number>[] // 配列の配列
 }
 
 
 export interface WindowState {
-  innerWidth: number,
-  innerHeight: number,
+  innerHeight: number
+  innerWidth: number
 }
 
 
 export interface TranslationConfig {
-  recognizeModel: string,
-  translateTo: string,
-  engine: string,
+  recognizeModel: string
+  translateTo: string
+  engine: string
+  translatorUrl: string
 }
