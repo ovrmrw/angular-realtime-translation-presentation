@@ -74,32 +74,7 @@ export class WatsonSpeechToTextWebSocketService {
         const tokenSetUrl = this.createUrl(token, model)
         this.ws = new WebSocket(tokenSetUrl)
 
-        this.ws.onmessage = async (event) => {
-          console.log('ws.onmessage:', event)
-          const data = JSON.parse(event.data) as RecognizedObject
-          console.log('data:', data)
-
-          if (data.error) { // ex. in case of error -> {"error": "No speech detected for 10s."}
-            this.webSocketStop()
-            return
-          }
-
-          if (data && data.results) {
-            this.store.setState(recognizedKey, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
-
-            if (data.results[0].final) { // 認識が完了しているかどうか。
-              const transcript = data.results[0].alternatives[0].transcript
-                .trim().replace(/^D_/, '').replace(/%HESITATION/g, '')
-
-              if (transcript) {
-                this.store.setState(transcriptKey, replaceAction(transcript))
-                  .then(s => this.store.setState(transcriptListKey, pushArrayAction(s.transcript)))
-                  .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
-                  .then(s => this.store.setState(translatedListKey, pushArrayAction(s.translated)))
-              }
-            }
-          }
-        }
+        this.ws.onmessage = this.onMessage
 
         this.ws.onerror = (event) => {
           console.error('ws.onerror', event)
@@ -133,6 +108,40 @@ export class WatsonSpeechToTextWebSocketService {
       this.ws.close()
       this.ws = null
     }
+  }
+
+
+  async onMessage(event): Promise<AppState | null> {
+    let appState: AppState | null = null
+
+    console.log('ws.onmessage:', event)
+    const data = JSON.parse(event.data) as RecognizedObject
+    console.log('data:', data)
+
+    if (data.error) { // ex. in case of error -> {"error": "No speech detected for 10s."}
+      this.webSocketStop()
+      return appState
+    }
+
+    if (data && data.results) {
+      appState = await this.store.setState(recognizedKey, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
+
+      if (data.results[0].final) { // 認識が完了しているかどうか。
+        const transcript = data.results[0].alternatives[0].transcript
+          .split(' ')
+          .filter(text => !text.match(/^D_/))
+          .filter(text => !text.match(/^%HESITATION/))
+          .join(' ').trim()
+
+        if (transcript) {
+          appState = await this.store.setState(transcriptKey, replaceAction(transcript))
+            .then(s => this.store.setState(transcriptListKey, pushArrayAction(s.transcript)))
+            .then(s => this.store.setState(translatedKey, this.translateService.requestTranslate(transcript)))
+            .then(s => this.store.setState(translatedListKey, pushArrayAction(s.translated)))
+        }
+      }
+    }
+    return appState
   }
 
 
