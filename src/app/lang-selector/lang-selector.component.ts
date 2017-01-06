@@ -2,8 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 
 import { MicrophoneService } from '../../lib/microphone'
 import { SimpleStore, replaceAction } from '../../lib/simple-store'
-import { AppState, TranslationConfig } from '../../state'
-import { translationConfigKey } from '../../state'
+import { AppState, TranslationConfig, KEY } from '../../state'
 import { GcpTranslatorUrl, McsTranslatorUrl } from '../../opaque-tokens';
 
 
@@ -76,13 +75,13 @@ export class LangSelectorComponent implements OnInit {
 
   setTranslationConfig(selected: string): void {
     if (selected === EnToJaGcp) {
-      this.store.setState(translationConfigKey, replaceAction(this.mergeUrl(EnToJaGcpConfig)))
+      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(EnToJaGcpConfig)))
     } else if (selected === JaToEnGcp) {
-      this.store.setState(translationConfigKey, replaceAction(this.mergeUrl(JaToEnGcpConfig)))
+      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(JaToEnGcpConfig)))
     } else if (selected === EnToJaMcs) {
-      this.store.setState(translationConfigKey, replaceAction(this.mergeUrl(EnToJaMcsConfig)))
+      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(EnToJaMcsConfig)))
     } else if (selected === JaToEnMcs) {
-      this.store.setState(translationConfigKey, replaceAction(this.mergeUrl(JaToEnMcsConfig)))
+      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(JaToEnMcsConfig)))
     }
   }
 

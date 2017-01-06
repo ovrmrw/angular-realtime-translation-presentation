@@ -1,3 +1,6 @@
+import { ObjectKeys } from './lib/simple-store';
+
+
 export const initialState: AppState = {
   transcript: '',
   transcriptList: [],
@@ -37,32 +40,19 @@ export interface AppState {
 }
 
 
-/* Component, Serviceでimportして使う文字列。 */
-export const transcriptKey = 'transcript'
-export const translatedKey = 'translated'
-export const transcriptListKey = 'transcriptList'
-export const translatedListKey = 'translatedList'
-export const recognizedKey = 'recognized'
-export const microphoneStateKey = 'microphoneState'
-export const socketStateKey = 'socketState'
-export const windowStateKey = 'windowState'
-export const translationConfigKey = 'translationConfig'
-export const slideUrlKey = 'slideUrl'
-
-
-/* AppState keysと上記の文字列定義に差異がないかチェックする。 */
-const __AppStateKeyValidation__: Array<keyof AppState> = [
-  transcriptKey,
-  translatedKey,
-  transcriptListKey,
-  translatedListKey,
-  recognizedKey,
-  microphoneStateKey,
-  socketStateKey,
-  windowStateKey,
-  translationConfigKey,
-  slideUrlKey,
-]
+/* Component, Serviceでimportして使うKEY。setState()の第一引数に使う。 */
+export const KEY: ObjectKeys<AppState> = {
+  transcript: 'transcript',
+  translated: 'translated',
+  transcriptList: 'transcriptList',
+  translatedList: 'translatedList',
+  recognized: 'recognized',
+  microphoneState: 'microphoneState',
+  socketState: 'socketState',
+  windowState: 'windowState',
+  translationConfig: 'translationConfig',
+  slideUrl: 'slideUrl',
+}
 
 
 export interface MicrophoneState {

@@ -3,8 +3,7 @@ import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
 import { SimpleStore } from '../../lib/simple-store'
-import { AppState } from '../../state'
-import { recognizedKey } from '../../state'
+import { AppState, KEY } from '../../state'
 
 
 @Component({
@@ -34,7 +33,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
   private initGetState(): void {
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(recognizedKey)
+      .filterByUpdatedKey(KEY.recognized)
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
           this.text = state.recognized.results[0].alternatives[0].transcript

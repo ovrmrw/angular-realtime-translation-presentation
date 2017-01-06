@@ -3,8 +3,7 @@ import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
 import { SimpleStore, replaceAction } from '../../lib/simple-store'
-import { AppState } from '../../state'
-import { slideUrlKey } from '../../state'
+import { AppState, KEY } from '../../state'
 
 
 @Component({
@@ -33,7 +32,7 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
 
     const slideUrl = localStorage.getItem('slideUrl')
     if (slideUrl) {
-      this.store.setState(slideUrlKey, replaceAction(slideUrl))
+      this.store.setState(KEY.slideUrl, replaceAction(slideUrl))
         .then(() => {
           this.url = slideUrl
           this.cd.markForCheck()
@@ -46,7 +45,7 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
     this.disposable = Observable.fromEvent(this.el.nativeElement, 'keyup')
       .debounceTime(200)
       .subscribe(event => {
-        this.store.setState(slideUrlKey, replaceAction(this.url))
+        this.store.setState(KEY.slideUrl, replaceAction(this.url))
           .then(() => {
             localStorage.setItem('slideUrl', this.url)
             // this.cd.markForCheck()            

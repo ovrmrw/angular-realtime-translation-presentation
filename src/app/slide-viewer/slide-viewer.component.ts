@@ -4,8 +4,8 @@ import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
 import { SimpleStore } from '../../lib/simple-store'
-import { AppState } from '../../state'
-import { slideUrlKey, windowStateKey } from '../../state'
+import { AppState, KEY } from '../../state'
+// import { slideUrlKey, windowStateKey } from '../../state'
 
 
 @Component({
@@ -41,7 +41,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
 
   private initGetState(): void {
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(slideUrlKey)
+      .filterByUpdatedKey(KEY.slideUrl)
       .subscribe(state => {
         const url = state.slideUrl + '/embed?start=false&loop=false&delayms=3000'
         this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url)
@@ -49,7 +49,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
       })
 
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(windowStateKey)
+      .filterByUpdatedKey(KEY.windowState)
       .subscribe(state => {
         this.screenWidth = state.windowState.innerWidth
         this.screenHeight = state.windowState.innerHeight - 50

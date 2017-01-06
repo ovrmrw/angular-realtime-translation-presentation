@@ -3,8 +3,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Disposer } from '../../lib/class'
 import { MicrophoneService } from '../../lib/microphone'
 import { SimpleStore } from '../../lib/simple-store'
-import { AppState } from '../../state'
-import { microphoneStateKey } from '../../state'
+import { AppState, KEY } from '../../state'
 
 
 @Component({
@@ -37,7 +36,7 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
 
   private initGetState(): void {
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(microphoneStateKey)
+      .filterByUpdatedKey(KEY.microphoneState)
       .subscribe(state => {
         this.isActive = state.microphoneState.isActive
         this.cd.markForCheck()

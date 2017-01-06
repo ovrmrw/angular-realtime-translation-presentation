@@ -3,8 +3,7 @@ import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
 import { SimpleStore } from '../../lib/simple-store'
-import { AppState } from '../../state'
-import { transcriptListKey, translatedListKey, windowStateKey } from '../../state'
+import { AppState, KEY } from '../../state'
 
 
 @Component({
@@ -57,7 +56,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
   private initGetState(): void {
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(windowStateKey)
+      .filterByUpdatedKey(KEY.windowState)
       .subscribe(state => {
         this.screenHeight = state.windowState.innerHeight
       })
@@ -70,7 +69,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
     }
 
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(transcriptListKey, translatedListKey)
+      .filterByUpdatedKey(KEY.transcriptList, KEY.translatedList)
       .scan((obj, state) => {
         const timestamp = new Date().getTime()
         const top = this.getTopPosition(obj.top)
