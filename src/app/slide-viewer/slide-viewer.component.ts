@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject, ElementRef } from '@angular/core'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 import { Observable } from 'rxjs'
 
@@ -29,6 +29,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
   constructor(
     private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
+    private el: ElementRef,
     private sanitizer: DomSanitizer,
   ) {
     super()
@@ -37,20 +38,22 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.initGetState()
+    this.setIFrameElement()
   }
 
 
   private initGetState(): void {
     this.disposable = this.store.getState()
-      .filterByUpdatedKey(KEY.slideUrl)
+      .filterByUpdatedKey(KEY.slideViwerConfig)
       .subscribe(state => {
-        let url: string = ''
-        if (state.slideUrl.includes('docs.google.com')) {
-          url = state.slideUrl + '/embed?start=false&loop=false&delayms=3000'
+        const url = state.slideViwerConfig.url
+        let fixedUrl: string = ''
+        if (url.includes('docs.google.com')) {
+          fixedUrl = url + '/embed?start=false&loop=false&delayms=3000'
         } else {
-          url = state.slideUrl
+          fixedUrl = url
         }
-        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fixedUrl)
         this.cd.markForCheck()
       })
 
@@ -63,6 +66,12 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
       })
   }
 
+
+  setIFrameElement(): Promise<any> {
+    const element = this.el.nativeElement as HTMLElement
+    const iframe = element.querySelector('iframe')
+    return this.store.setState(KEY.slideViwerConfig, (p) => ({ url: p.url, element: iframe }))
+  }
 
 
   ngOnDestroy() {

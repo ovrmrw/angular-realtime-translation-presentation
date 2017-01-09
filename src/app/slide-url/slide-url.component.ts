@@ -32,7 +32,8 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
 
     const slideUrl = localStorage.getItem('slideUrl')
     if (slideUrl) {
-      this.store.setState(KEY.slideUrl, replaceAction(slideUrl))
+      // this.store.setState(KEY.slideUrl, replaceAction(slideUrl))
+      this.store.setState(KEY.slideViwerConfig, (p) => ({ url: slideUrl, element: p.element }))
         .then(() => {
           this.url = slideUrl
           this.cd.markForCheck()
@@ -45,7 +46,8 @@ export class SlideUrlComponent extends Disposer implements OnInit, OnDestroy {
     this.disposable = Observable.fromEvent(this.el.nativeElement, 'keyup')
       .debounceTime(200)
       .subscribe(event => {
-        this.store.setState(KEY.slideUrl, replaceAction(this.url))
+        // this.store.setState(KEY.slideUrl, replaceAction(this.url))
+        this.store.setState(KEY.slideViwerConfig, (p) => ({ url: this.url, element: p.element }))
           .then(() => {
             localStorage.setItem('slideUrl', this.url)
             // this.cd.markForCheck()            

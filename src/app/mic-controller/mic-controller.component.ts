@@ -62,10 +62,10 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
   }
 
 
-  focusSlideViewer() {
-    const viewer = document.getElementById(slideViewerId)
-    if (viewer) {
-      viewer.focus()
+  async focusSlideViewer() {
+    const viewerElement = await this.store.getStateAsPromise().then(s => s.slideViwerConfig.element)
+    if (viewerElement) {
+      viewerElement.focus()
     }
   }
 

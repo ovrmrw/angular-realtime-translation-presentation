@@ -22,6 +22,10 @@ export const initialState: AppState = {
     translatorUrl: '',
   },
   slideUrl: '',
+  slideViwerConfig: {
+    url: '',
+    element: null,
+  }
 }
 
 
@@ -37,6 +41,7 @@ export interface AppState {
   windowState: WindowState
   translationConfig: TranslationConfig
   slideUrl: string
+  slideViwerConfig: SlideViwerConfig
 }
 
 
@@ -52,6 +57,7 @@ export const KEY: ObjectKeys<AppState> = {
   windowState: 'windowState',
   translationConfig: 'translationConfig',
   slideUrl: 'slideUrl',
+  slideViwerConfig: 'slideViwerConfig',
 }
 
 
@@ -93,4 +99,10 @@ export interface TranslationConfig {
   translateTo: string
   engine: string
   translatorUrl: string
+}
+
+
+export interface SlideViwerConfig {
+  url: string
+  element: HTMLIFrameElement | null
 }
