@@ -4,6 +4,7 @@ import { Disposer } from '../../lib/class'
 import { MicrophoneService } from '../../lib/microphone'
 import { SimpleStore } from '../../lib/simple-store'
 import { AppState, KEY } from '../../state'
+import { slideViewerId } from '../../config';
 
 
 @Component({
@@ -51,11 +52,21 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
 
   record() {
     this.microphoneService.record()
+    this.focusSlideViewer()
   }
 
 
   stop() {
     this.microphoneService.stop()
+    this.focusSlideViewer()
+  }
+
+
+  focusSlideViewer() {
+    const viewer = document.getElementById(slideViewerId)
+    if (viewer) {
+      viewer.focus()
+    }
   }
 
 }

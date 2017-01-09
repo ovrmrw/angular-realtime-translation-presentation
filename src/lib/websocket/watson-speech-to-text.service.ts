@@ -73,7 +73,7 @@ export class WatsonSpeechToTextWebSocketService {
         const tokenSetUrl = this.createUrl(token, model)
         this.ws = new WebSocket(tokenSetUrl)
 
-        this.ws.onmessage = this.onMessage
+        this.ws.onmessage = this.onMessage.bind(this)
 
         this.ws.onerror = (event) => {
           console.error('ws.onerror', event)
@@ -126,10 +126,13 @@ export class WatsonSpeechToTextWebSocketService {
       appState = await this.store.setState(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
 
       if (data.results[0].final) { // 認識が完了しているかどうか。
+        const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
+
         const transcript = data.results[0].alternatives[0].transcript
           .split(' ')
           .filter(text => !text.match(/^D_/))
           .filter(text => !text.match(/^%HESITATION/))
+          .map(text => blacklist.some(b => b === text.toUpperCase()) ? '****' : text) // blacklist filter
           .join(' ').trim()
 
         if (transcript) {
