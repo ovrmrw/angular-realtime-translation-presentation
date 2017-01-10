@@ -71,6 +71,7 @@ export interface RecognizedObject {
   results: RecognizedResult[]
   state?: string
   error?: string
+  transcript: string
 }
 
 
