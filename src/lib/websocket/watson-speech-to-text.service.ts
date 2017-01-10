@@ -123,7 +123,8 @@ export class WatsonSpeechToTextWebSocketService {
     }
 
     if (data && data.results) {
-      appState = await this.store.setState(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
+      // appState = await this.store.setState(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
+      appState = await this.store.setState(KEY.recognized, recognizedResolver.bind(data))
 
       if (data.results[0].final) { // 認識が完了しているかどうか。
         // const transcript = data.results[0].alternatives[0].transcript
@@ -153,13 +154,32 @@ export class WatsonSpeechToTextWebSocketService {
 }
 
 
-export function transcriptFinisher(transcript: string, removeOffensive: boolean = true, removeUnword: boolean = true): string {
-  let chunks = transcript.split(' ')
 
-  if (removeOffensive) {
-    chunks = chunks
+function recognizedResolver(this: RecognizedObject, previous: RecognizedObject | null): RecognizedObject | null {
+  if (!this) { throw new Error('"this" object should be typed as RecognizedObject.') }
+
+  const data = this
+  if (data.state) { // ex. in case of state -> {"state": "listening"}
+    return previous
+  } else {
+    const transcript = data.results[0].alternatives[0].transcript
+      .split(' ')
       .map(blacklistReplacer)
+      .join(' ').trim()
+    data.results[0].alternatives[0].transcript = transcript
+    return data
   }
+}
+
+
+function blacklistReplacer(text: string): string {
+  const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
+  return blacklist.some(b => b === text.toUpperCase()) ? '****' : text
+}
+
+
+export function transcriptFinisher(transcript: string, removeUnword: boolean = true): string {
+  let chunks = transcript.split(' ')
 
   if (removeUnword) {
     chunks = chunks
@@ -168,10 +188,4 @@ export function transcriptFinisher(transcript: string, removeOffensive: boolean 
   }
 
   return chunks.join(' ').trim()
-}
-
-
-function blacklistReplacer(text: string): string {
-  const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
-  return blacklist.some(b => b === text.toUpperCase()) ? '****' : text
 }
