@@ -126,14 +126,13 @@ export class WatsonSpeechToTextWebSocketService {
       appState = await this.store.setState(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
 
       if (data.results[0].final) { // 認識が完了しているかどうか。
-        const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
-
-        const transcript = data.results[0].alternatives[0].transcript
-          .split(' ')
-          .filter(text => !text.match(/^D_/))
-          .filter(text => !text.match(/^%HESITATION/))
-          .map(text => blacklist.some(b => b === text.toUpperCase()) ? '****' : text) // blacklist filter
-          .join(' ').trim()
+        // const transcript = data.results[0].alternatives[0].transcript
+        //   .split(' ')
+        //   .filter(text => !text.match(/^D_/))
+        //   .filter(text => !text.match(/^%HESITATION/))
+        //   .map(blacklistReplacer) // blacklist filter
+        //   .join(' ').trim()
+        const transcript = transcriptFinisher(data.results[0].alternatives[0].transcript)
 
         if (transcript) {
           appState = await this.store.setState(KEY.transcript, replaceAction(transcript))
@@ -151,4 +150,28 @@ export class WatsonSpeechToTextWebSocketService {
     return this.ws
   }
 
+}
+
+
+export function transcriptFinisher(transcript: string, removeOffensive: boolean = true, removeUnword: boolean = true): string {
+  let chunks = transcript.split(' ')
+
+  if (removeOffensive) {
+    chunks = chunks
+      .map(blacklistReplacer)
+  }
+
+  if (removeUnword) {
+    chunks = chunks
+      .filter(text => !text.match(/^D_/))
+      .filter(text => !text.match(/^%HESITATION/))
+  }
+
+  return chunks.join(' ').trim()
+}
+
+
+function blacklistReplacer(text: string): string {
+  const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
+  return blacklist.some(b => b === text.toUpperCase()) ? '****' : text
 }
