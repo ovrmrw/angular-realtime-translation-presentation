@@ -28,7 +28,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
-    // this.flowTestTexts()
+    this.flowTestTexts()
     this.initGetState()
   }
 
