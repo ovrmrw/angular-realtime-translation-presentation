@@ -11,15 +11,17 @@ export const storeQueueConcurrent: number = 99
 
 
 export const watsonSpeechToTextStartOption = {
-  'content-type': 'audio/l16;rate=16000',
+  // 'content-type': 'audio/l16;rate=16000',
   'interim_results': true,
   'continuous': true,
-  'word_confidence': true,
-  'timestamps': true,
+  // 'word_confidence': true,
+  // 'timestamps': true,
   // 'max_alternatives': 3,
-  'inactivity_timeout': 20, // 30,
+  'inactivity_timeout': 30, // 30,
   // 'word_alternatives_threshold': 0.001,
   'smart_formatting': true,
+  profanity_filter: true, // reject bad words.
+  // speaker_labels: true, Broadband Models are not supported.
 }
 
 
