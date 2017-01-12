@@ -49,7 +49,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         this.cd.markForCheck()
 
         /* filtering array */
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 20) // 15秒後に削除する。
+        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 20) // 20秒後に削除する。
       })
   }
 
@@ -89,11 +89,11 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         }
       }, initialObj)
       .subscribe(() => {
-        this.cd.markForCheck()
-
         /* filtering array */
         const now = new Date().getTime()
         this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 20) // 15秒後に削除する。
+
+        this.cd.markForCheck()
       })
   }
 
