@@ -130,7 +130,6 @@ export class WatsonSpeechToTextWebSocketService {
         //   .split(' ')
         //   .filter(text => !text.match(/^D_/))
         //   .filter(text => !text.match(/^%HESITATION/))
-        //   .map(blacklistReplacer) // blacklist filter
         //   .join(' ').trim()
         const transcript = transcriptFinisher(data.results[0].alternatives[0].transcript)
 
@@ -154,13 +153,8 @@ export class WatsonSpeechToTextWebSocketService {
 
 
 
-export function transcriptFinisher(transcript: string, removeOffensive: boolean = true, removeUnword: boolean = true): string {
+export function transcriptFinisher(transcript: string, removeUnword: boolean = true): string {
   let chunks = transcript.split(' ')
-
-  if (removeOffensive) {
-    chunks = chunks
-      .map(blacklistReplacer)
-  }
 
   if (removeUnword) {
     chunks = chunks
@@ -170,17 +164,3 @@ export function transcriptFinisher(transcript: string, removeOffensive: boolean 
 
   return chunks.join(' ').trim()
 }
-
-
-function blacklistReplacer(text: string): string {
-  const blacklist = ['FUCK', 'FUCKED', 'RAPE', 'RAPED']
-  return blacklist.some(b => b === text.toUpperCase()) ? '****' : text
-}
-
-
-const replaceObj = [
-  {
-    match: /Wakrel/g,
-    replace: 'Watson',
-  }
-]

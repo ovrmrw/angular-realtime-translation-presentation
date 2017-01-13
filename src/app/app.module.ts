@@ -8,7 +8,7 @@ import { LibModule } from '../lib/lib.module'
 import { AppComponent } from './app.component'
 import { MicControllerComponent } from './mic-controller'
 import { SlideViewerComponent } from './slide-viewer'
-import { MeteorTowerComponent, MeteorComponent } from './meteor'
+import { CometTowerComponent, CometComponent } from './comet'
 import { FlashComponent } from './flash'
 import { LangSelectorComponent } from './lang-selector'
 import { SlideUrlComponent } from './slide-url'
@@ -30,8 +30,8 @@ import {
     AppComponent,
     MicControllerComponent,
     SlideViewerComponent,
-    MeteorComponent,
-    MeteorTowerComponent,
+    CometComponent,
+    CometTowerComponent,
     FlashComponent,
     LangSelectorComponent,
     SlideUrlComponent,

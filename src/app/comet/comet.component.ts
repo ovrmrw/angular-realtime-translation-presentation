@@ -4,16 +4,16 @@ import { Observable } from 'rxjs'
 
 
 @Component({
-  selector: 'app-meteor',
+  selector: 'app-comet',
   template: `
-    <div class="meteor no-select" 
+    <div class="comet no-select" 
       (click)="onClick()"
       [@flyInOut]="true" 
       [style.left.px]="startPosition" [style.top.px]="top" [style.color]="color" [style.zIndex]="index"
       [style.opacity]="opacity">{{text}}
     </div>
   `,
-  styleUrls: ['./meteor.component.css'],
+  styleUrls: ['./comet.component.css'],
   animations: [
     trigger('flyInOut', [
       state('true', style({ transform: 'translateX(-9000px)' })), // 最終的に到達する座標。
@@ -25,7 +25,7 @@ import { Observable } from 'rxjs'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MeteorComponent implements OnInit {
+export class CometComponent implements OnInit {
   @Input() text: string
   @Input() top: number
   @Input() index: number
@@ -40,7 +40,7 @@ export class MeteorComponent implements OnInit {
 
 
   ngOnInit() {
-    this.startPosition = window.innerWidth - (window.innerWidth / 5)
+    this.startPosition = Math.round(window.innerWidth - (window.innerWidth / 5))
   }
 
 

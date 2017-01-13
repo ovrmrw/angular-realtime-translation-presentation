@@ -4,7 +4,6 @@ import { Observable } from 'rxjs'
 import { Disposer } from '../../lib/class'
 import { SimpleStore } from '../../lib/simple-store'
 import { AppState, KEY } from '../../state'
-import { transcriptFinisher } from '../../lib/websocket';
 
 
 @Component({
@@ -37,7 +36,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
       .filterByUpdatedKey(KEY.recognized)
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {
-          this.text = transcriptFinisher(state.recognized.results[0].alternatives[0].transcript, true, false)
+          this.text = state.recognized.results[0].alternatives[0].transcript
         } else {
           this.text = ''
         }

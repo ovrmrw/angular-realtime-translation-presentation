@@ -23,7 +23,7 @@ import { WindowService } from '../lib/dom';
     </div>
 
     <app-flash></app-flash>
-    <app-meteor-tower></app-meteor-tower>
+    <app-comet-tower></app-comet-tower>
   `,
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

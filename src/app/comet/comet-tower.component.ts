@@ -7,15 +7,15 @@ import { AppState, KEY } from '../../state'
 
 
 @Component({
-  selector: 'app-meteor-tower',
+  selector: 'app-comet-tower',
   template: `
-    <app-meteor *ngFor="let m of meteors let i = index" [text]="m.text" [top]="m.top" [color]="m.color" [index]="i + 1">
-    </app-meteor>
+    <app-comet *ngFor="let c of comets let i = index" [text]="c.text" [top]="c.top" [color]="c.color" [index]="i + 1">
+    </app-comet>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy {
-  meteors: Meteor[] = []
+export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
+  comets: Comet[] = []
   screenHeight: number
 
 
@@ -45,11 +45,11 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         previousTop = top
 
         const timestamp = new Date().getTime()
-        this.meteors.push({ text, top, timestamp, color: 'lightgreen' })
+        this.comets.push({ text, top, timestamp, color: 'lightgreen' })
         this.cd.markForCheck()
 
         /* filtering array */
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > timestamp - 1000 * 20) // 20秒後に削除する。
+        this.comets = this.comets.filter(meteor => meteor.timestamp > timestamp - 1000 * 20) // 20秒後に削除する。
       })
   }
 
@@ -76,10 +76,10 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
         // const top: number = this.getTopPosition2(obj.top, 60)
 
         if (state.transcriptList.length > obj.transcriptIndex) {
-          this.meteors.push({ text: state.transcript, top, timestamp, color: 'white' })
+          this.comets.push({ text: state.transcript, top, timestamp, color: 'white' })
         }
         if (state.translatedList.length > obj.translatedIndex) {
-          this.meteors.push({ text: state.translated, top, timestamp, color: 'springgreen' })
+          this.comets.push({ text: state.translated, top, timestamp, color: 'springgreen' })
         }
 
         return {
@@ -91,7 +91,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
       .subscribe(() => {
         /* filtering array */
         const now = new Date().getTime()
-        this.meteors = this.meteors.filter(meteor => meteor.timestamp > now - 1000 * 20) // 15秒後に削除する。
+        this.comets = this.comets.filter(comet => comet.timestamp > now - 1000 * 20) // 15秒後に削除する。
 
         this.cd.markForCheck()
       })
@@ -106,7 +106,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
   getTopPosition(previousTop: number): number {
     let top: number
     do {
-      top = (this.screenHeight * 0.8) * Math.random() // 高さをランダムに決定。
+      top = Math.round((this.screenHeight * 0.8) * Math.random()) // 高さをランダムに決定。
     } while (Math.abs(top - previousTop) < (this.screenHeight / 10)) // 前回と縦10分割位以上の差がつくこと。
     return top
   }
@@ -116,7 +116,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
     if (previousTop + diff > this.screenHeight * 0.8) {
       return 0
     } else {
-      return previousTop + diff
+      return Math.round(previousTop + diff)
     }
   }
 
@@ -124,7 +124,7 @@ export class MeteorTowerComponent extends Disposer implements OnInit, OnDestroy 
 
 
 
-interface Meteor {
+interface Comet {
   text: string
   top: number
   timestamp: number
