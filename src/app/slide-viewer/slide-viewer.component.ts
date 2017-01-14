@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject, ElementRef } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject, ElementRef, AfterViewInit } from '@angular/core'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 import { Observable } from 'rxjs'
 
@@ -19,11 +19,12 @@ import { slideViewerId } from '../../config';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy {
+export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy, AfterViewInit {
   screenWidth: number
   screenHeight: number
   safeUrl: SafeResourceUrl
-  slideViewerId = slideViewerId
+  slideViewerId: string
+  viewerElement: HTMLIFrameElement
 
 
   constructor(
@@ -37,14 +38,15 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   ngOnInit() {
+    this.slideViewerId = slideViewerId
+    this.viewerElement = this.el.nativeElement.querySelector('iframe')
     this.initGetState()
-    this.setIFrameElement()
   }
 
 
   private initGetState(): void {
     this.disposable = this.store.getter()
-      .filterByUpdatedKey(KEY.slideViwerConfig)
+      .filterByUpdatedKey(KEY.slideViwerConfig) // SlideViewer設定が変更されたとき。
       .subscribe(state => {
         const url = state.slideViwerConfig.url
         let fixedUrl: string = ''
@@ -58,24 +60,36 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
       })
 
     this.disposable = this.store.getter()
-      .filterByUpdatedKey(KEY.windowState)
+      .filterByUpdatedKey(KEY.windowState) // Window状態が更新されたとき。
       .subscribe(state => {
         this.screenWidth = state.windowState.innerWidth
         this.screenHeight = state.windowState.innerHeight - 50
         this.cd.markForCheck()
       })
+
+    this.disposable = this.store.getter()
+      .filterByUpdatedKey(KEY.signalFocusSlideViewer) // FocusSlideViewerのシグナルが発行されたとき。
+      .debounceTime(500)
+      .subscribe(state => {
+        this.focusViewerElement()
+      })
   }
 
 
-  setIFrameElement(): Promise<any> {
-    const element = this.el.nativeElement as HTMLElement
-    const iframe = element.querySelector('iframe')
-    return this.store.setter(KEY.slideViwerConfig, (p) => ({ url: p.url, element: iframe }))
+  ngAfterViewInit() {
+    this.focusViewerElement()
   }
 
 
   ngOnDestroy() {
     this.disposeSubscriptions()
+  }
+
+
+  focusViewerElement(): void {
+    if (this.viewerElement) {
+      this.viewerElement.focus()
+    }
   }
 
 }

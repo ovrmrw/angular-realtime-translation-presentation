@@ -70,6 +70,7 @@ export class LangSelectorComponent implements OnInit {
     const selected: string = event.target['value']
     this.setTranslationConfig(selected)
     this.micService.stop() // 言語切り替えをしたときはマイクを止める。
+    this.focusSlideViewer()
   }
 
 
@@ -98,6 +99,11 @@ export class LangSelectorComponent implements OnInit {
       throw new Error('translatorUrl is not defined.')
     }
     return obj as TranslationConfig
+  }
+
+
+  focusSlideViewer(): void {
+    this.store.setter(KEY.signalFocusSlideViewer, null)
   }
 
 }

@@ -65,11 +65,8 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
   /**
    * スライドにフォーカスを移してiframeのスライドがキーボードイベントをキャッチできるようにする。
    */
-  async focusSlideViewer() {
-    const viewerElement = await this.store.getterAsPromise().then(s => s.slideViwerConfig.element)
-    if (viewerElement) {
-      viewerElement.focus()
-    }
+  focusSlideViewer() {
+    this.store.setter(KEY.signalFocusSlideViewer, null)
   }
 
 }

@@ -25,23 +25,25 @@ export const initialState: AppState = {
   slideViwerConfig: {
     url: '',
     element: null,
-  }
+  },
+  signalFocusSlideViewer: null,
 }
 
 
 /* Stateの型定義。 */
 export interface AppState {
-  transcript: string
-  translated: string
-  transcriptList: string[]
-  translatedList: string[]
-  recognized: RecognizedObject | null
-  microphoneState: MicrophoneState
-  socketState: string
-  windowState: WindowState
-  translationConfig: TranslationConfig
-  // slideUrl: string
-  slideViwerConfig: SlideViwerConfig
+  transcript: string,
+  translated: string,
+  transcriptList: string[],
+  translatedList: string[],
+  recognized: RecognizedObject | null,
+  microphoneState: MicrophoneState,
+  socketState: string,
+  windowState: WindowState,
+  translationConfig: TranslationConfig,
+  // slideUrl: string,
+  slideViwerConfig: SlideViwerConfig,
+  signalFocusSlideViewer: null,
 }
 
 
@@ -58,6 +60,7 @@ export const KEY: ObjectKeys<AppState> = {
   translationConfig: 'translationConfig',
   // slideUrl: 'slideUrl',
   slideViwerConfig: 'slideViwerConfig',
+  signalFocusSlideViewer: 'signalFocusSlideViewer',
 }
 
 
