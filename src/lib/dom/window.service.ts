@@ -34,7 +34,7 @@ export class WindowService {
       innerWidth: window.innerWidth,
       innerHeight: window.innerHeight,
     }
-    this.store.setter(KEY.windowState, replaceAction(obj))
+    this.store.setter(KEY.windowState, obj)
   }
 
 }
