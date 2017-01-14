@@ -32,7 +32,6 @@ const STOP_OPTIONS = {
 @Injectable()
 export class WatsonSpeechToTextWebSocketService {
   private ws: WebSocket | null = null
-  private startOptions: {}
 
 
   constructor(
@@ -40,10 +39,9 @@ export class WatsonSpeechToTextWebSocketService {
     private recognizeService: WatsonSpeechToTextService,
     private translateService: TranslatorService,
     @Inject(WatsonSpeechToTextStartOption) @Optional()
-    private options: {} | null,
+    private startOptions: {} | null,
   ) {
     this.initGetState()
-    this.startOptions = { ...START_OPTIONS, ...options } // Object.assign(START_OPTIONS, options)
   }
 
 
@@ -82,7 +80,7 @@ export class WatsonSpeechToTextWebSocketService {
         this.ws.onopen = (event) => {
           console.log('ws.onopen', event)
           if (this.ws) {
-            this.ws.send(JSON.stringify(START_OPTIONS))
+            this.ws.send(JSON.stringify({ ...START_OPTIONS, ...this.startOptions }))
             console.log('{ action: "start" } is sent.')
           }
           resolve()

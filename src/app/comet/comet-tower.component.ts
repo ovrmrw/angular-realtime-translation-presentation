@@ -73,7 +73,7 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
       .scan((obj, state) => {
         const timestamp = new Date().getTime()
         // const top = this.getTopPosition(obj.top)
-        const top = this.getTopPosition2(obj.top, 60)
+        const top = this.getTopPosition2(obj.top, 70)
 
         if (state.transcriptList.length > obj.transcriptIndex) {
           this.comets.push({ text: state.transcript, top, timestamp, color: 'white' })
@@ -119,7 +119,7 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
    * Cometを表示する高さをランダムではなく上から順に決定していくアルゴリズム。
    */
   getTopPosition2(previousTop: number, diff: number): number {
-    if (previousTop + diff > this.screenHeight * 0.8) {
+    if (previousTop + diff > this.screenHeight * 0.7) {
       return 0
     } else {
       return Math.round(previousTop + diff)
