@@ -36,7 +36,7 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
 
 
   private initGetState(): void {
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.microphoneState)
       .subscribe(state => {
         this.isActive = state.microphoneState.isActive
@@ -62,8 +62,11 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
   }
 
 
+  /**
+   * スライドにフォーカスを移してiframeのスライドがキーボードイベントをキャッチできるようにする。
+   */
   async focusSlideViewer() {
-    const viewerElement = await this.store.getStateAsPromise().then(s => s.slideViwerConfig.element)
+    const viewerElement = await this.store.getterAsPromise().then(s => s.slideViwerConfig.element)
     if (viewerElement) {
       viewerElement.focus()
     }

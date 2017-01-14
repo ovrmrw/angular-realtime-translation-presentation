@@ -32,7 +32,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
 
   private initGetState(): void {
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.recognized)
       .subscribe(state => {
         if (state.recognized && state.recognized.results && !state.recognized.results[0].final) {

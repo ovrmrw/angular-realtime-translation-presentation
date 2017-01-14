@@ -22,7 +22,7 @@ export class TranslatorService {
     if (this.useMockTranslator) { // useMockTranslatorがtrutyのときはTranslator APIを使わない。
       result = '(mocked) ' + text
     } else {
-      const state = await this.store.getStateAsPromise()
+      const state = await this.store.getterAsPromise()
       const translatorUrl = state.translationConfig.translatorUrl
       const payload: Payload = {
         translateTo: state.translationConfig.translateTo,

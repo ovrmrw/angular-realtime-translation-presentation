@@ -84,19 +84,19 @@ export class SimpleStore<T> {
   }
 
 
-  setState<K extends keyof T>(key: K, value: ValueOrResolver<T, K>): Promise<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
+  setter<K extends keyof T>(key: K, value: ValueOrResolver<T, K>): Promise<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
     const subject = new Subject<T | RecursiveReadonly<T>>()
     this.simpleStore$.next({ key, value, subject })
     return subject.take(1).toPromise()
   }
 
 
-  getState(): Observable<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
+  getter(): Observable<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
     return this.provider$
   }
 
 
-  getStateAsPromise(): Promise<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
+  getterAsPromise(): Promise<T> { // TをRecursiveReadonly<T>にするとプロパティ名の一斉リネームが出来なくなる。
     return this.provider$.take(1).toPromise()
   }
 

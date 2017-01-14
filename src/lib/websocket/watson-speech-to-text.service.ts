@@ -4,10 +4,8 @@ import * as lodash from 'lodash'
 
 import { WatsonSpeechToTextStartOption } from './common'
 import { WatsonSpeechToTextService } from '../watson'
-// import { GcpTranslatorService, GcpTranslatorServiceMock } from '../gcp'
-// import { McsTranslatorTextService, McsTranslatorTextServiceMock } from '../mcs'
-import { TranslatorService } from '../translator';
-import { SimpleStore, replaceAction, pushArrayAction } from '../simple-store'
+import { TranslatorService } from '../translator'
+import { SimpleStore } from '../simple-store'
 import { AppState, RecognizedObject, KEY } from '../../state'
 
 
@@ -45,12 +43,12 @@ export class WatsonSpeechToTextWebSocketService {
     private options: {} | null,
   ) {
     this.initGetState()
-    this.startOptions = Object.assign(START_OPTIONS, options)
+    this.startOptions = { ...START_OPTIONS, ...options } // Object.assign(START_OPTIONS, options)
   }
 
 
   private initGetState(): void {
-    this.store.getState()
+    this.store.getter()
       .filterByUpdatedKey(KEY.socketState)
       .subscribe(state => {
         console.log('socket state:', state.socketState)
@@ -66,7 +64,7 @@ export class WatsonSpeechToTextWebSocketService {
   webSocketStart(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       const token = await this.recognizeService.requestToken()
-      const state = await this.store.getStateAsPromise()
+      const state = await this.store.getterAsPromise()
       const model = state.translationConfig.recognizeModel
 
       if (!this.ws && token && model) {
@@ -78,7 +76,7 @@ export class WatsonSpeechToTextWebSocketService {
         this.ws.onerror = (event) => {
           console.error('ws.onerror', event)
           reject()
-          this.store.setState(KEY.socketState, replaceAction(event.type))
+          this.store.setter(KEY.socketState, event.type)
         }
 
         this.ws.onopen = (event) => {
@@ -88,12 +86,12 @@ export class WatsonSpeechToTextWebSocketService {
             console.log('{ action: "start" } is sent.')
           }
           resolve()
-          this.store.setState(KEY.socketState, replaceAction(event.type))
+          this.store.setter(KEY.socketState, event.type)
         }
 
         this.ws.onclose = (event) => {
           console.log('ws.onclose', event)
-          this.store.setState(KEY.socketState, replaceAction(event.type))
+          this.store.setter(KEY.socketState, event.type)
         }
       }
     })
@@ -123,7 +121,7 @@ export class WatsonSpeechToTextWebSocketService {
     }
 
     if (data && data.results) {
-      appState = await this.store.setState(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
+      appState = await this.store.setter(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
 
       if (data.results[0].final) { // 認識が完了しているかどうか。
         // const transcript = data.results[0].alternatives[0].transcript
@@ -134,10 +132,10 @@ export class WatsonSpeechToTextWebSocketService {
         const transcript = transcriptFinisher(data.results[0].alternatives[0].transcript)
 
         if (transcript) {
-          appState = await this.store.setState(KEY.transcript, replaceAction(transcript))
-            .then(s => this.store.setState(KEY.transcriptList, pushArrayAction(s.transcript)))
-            .then(s => this.store.setState(KEY.translated, this.translateService.requestTranslate(transcript)))
-            .then(s => this.store.setState(KEY.translatedList, pushArrayAction(s.translated)))
+          appState = await this.store.setter(KEY.transcript, transcript)
+            .then(s => this.store.setter(KEY.transcriptList, (p) => [...p, transcript]))
+            .then(s => this.store.setter(KEY.translated, this.translateService.requestTranslate(transcript)))
+            .then(s => this.store.setter(KEY.translatedList, (p) => [...p, s.translated]))
         }
       }
     }

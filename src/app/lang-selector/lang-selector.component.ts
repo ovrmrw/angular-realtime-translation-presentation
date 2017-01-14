@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core'
 
 import { MicrophoneService } from '../../lib/microphone'
-import { SimpleStore, replaceAction } from '../../lib/simple-store'
+import { SimpleStore } from '../../lib/simple-store'
 import { AppState, TranslationConfig, KEY } from '../../state'
 import { GcpTranslatorUrl, McsTranslatorUrl } from '../../opaque-tokens';
 
@@ -75,13 +75,13 @@ export class LangSelectorComponent implements OnInit {
 
   setTranslationConfig(selected: string): void {
     if (selected === EnToJaGcp) {
-      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(EnToJaGcpConfig)))
+      this.store.setter(KEY.translationConfig, this.mergeUrl(EnToJaGcpConfig))
     } else if (selected === JaToEnGcp) {
-      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(JaToEnGcpConfig)))
+      this.store.setter(KEY.translationConfig, this.mergeUrl(JaToEnGcpConfig))
     } else if (selected === EnToJaMcs) {
-      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(EnToJaMcsConfig)))
+      this.store.setter(KEY.translationConfig, this.mergeUrl(EnToJaMcsConfig))
     } else if (selected === JaToEnMcs) {
-      this.store.setState(KEY.translationConfig, replaceAction(this.mergeUrl(JaToEnMcsConfig)))
+      this.store.setter(KEY.translationConfig, this.mergeUrl(JaToEnMcsConfig))
     }
   }
 

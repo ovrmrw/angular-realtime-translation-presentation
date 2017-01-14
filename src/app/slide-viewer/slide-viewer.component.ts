@@ -43,7 +43,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
 
 
   private initGetState(): void {
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.slideViwerConfig)
       .subscribe(state => {
         const url = state.slideViwerConfig.url
@@ -57,7 +57,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
         this.cd.markForCheck()
       })
 
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.windowState)
       .subscribe(state => {
         this.screenWidth = state.windowState.innerWidth
@@ -70,7 +70,7 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy 
   setIFrameElement(): Promise<any> {
     const element = this.el.nativeElement as HTMLElement
     const iframe = element.querySelector('iframe')
-    return this.store.setState(KEY.slideViwerConfig, (p) => ({ url: p.url, element: iframe }))
+    return this.store.setter(KEY.slideViwerConfig, (p) => ({ url: p.url, element: iframe }))
   }
 
 

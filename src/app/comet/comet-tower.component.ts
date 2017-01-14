@@ -55,7 +55,7 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
 
 
   private initGetState(): void {
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.windowState)
       .subscribe(state => {
         this.screenHeight = state.windowState.innerHeight
@@ -68,12 +68,12 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
       translatedIndex: 0,
     }
 
-    this.disposable = this.store.getState()
+    this.disposable = this.store.getter()
       .filterByUpdatedKey(KEY.transcriptList, KEY.translatedList)
       .scan((obj, state) => {
         const timestamp = new Date().getTime()
-        const top = this.getTopPosition(obj.top)
-        // const top: number = this.getTopPosition2(obj.top, 60)
+        // const top = this.getTopPosition(obj.top)
+        const top = this.getTopPosition2(obj.top, 60)
 
         if (state.transcriptList.length > obj.transcriptIndex) {
           this.comets.push({ text: state.transcript, top, timestamp, color: 'white' })
@@ -91,7 +91,7 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
       .subscribe(() => {
         /* filtering array */
         const now = new Date().getTime()
-        this.comets = this.comets.filter(comet => comet.timestamp > now - 1000 * 20) // 15秒後に削除する。
+        this.comets = this.comets.filter(comet => comet.timestamp > now - 1000 * 20) // 20秒後に削除する。
 
         this.cd.markForCheck()
       })
@@ -103,6 +103,9 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Cometを表示する高さをランダムに設定するアルゴリズム。
+   */
   getTopPosition(previousTop: number): number {
     let top: number
     do {
@@ -112,6 +115,9 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * Cometを表示する高さをランダムではなく上から順に決定していくアルゴリズム。
+   */
   getTopPosition2(previousTop: number, diff: number): number {
     if (previousTop + diff > this.screenHeight * 0.8) {
       return 0

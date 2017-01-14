@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { SimpleStore, replaceAction } from '../simple-store'
+import { SimpleStore } from '../simple-store'
 import { AppState, WindowState, KEY } from '../../state'
 
 
@@ -34,7 +34,7 @@ export class WindowService {
       innerWidth: window.innerWidth,
       innerHeight: window.innerHeight,
     }
-    this.store.setState(KEY.windowState, replaceAction(obj))
+    this.store.setter(KEY.windowState, replaceAction(obj))
   }
 
 }
