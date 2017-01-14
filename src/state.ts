@@ -21,7 +21,7 @@ export const initialState: AppState = {
     engine: '', // 'gcp',
     translatorUrl: '',
   },
-  slideUrl: '',
+  // slideUrl: '',
   slideViwerConfig: {
     url: '',
     element: null,
@@ -40,7 +40,7 @@ export interface AppState {
   socketState: string
   windowState: WindowState
   translationConfig: TranslationConfig
-  slideUrl: string
+  // slideUrl: string
   slideViwerConfig: SlideViwerConfig
 }
 
@@ -56,7 +56,7 @@ export const KEY: ObjectKeys<AppState> = {
   socketState: 'socketState',
   windowState: 'windowState',
   translationConfig: 'translationConfig',
-  slideUrl: 'slideUrl',
+  // slideUrl: 'slideUrl',
   slideViwerConfig: 'slideViwerConfig',
 }
 
