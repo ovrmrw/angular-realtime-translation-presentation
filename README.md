@@ -3,6 +3,22 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ---
 
+## Setup
+
+ATTENTION) As of 2017/01/15, building this app is failed by one of the angular-cli's libs, sorry.
+
+```
+$ npm install
+```
+
+## Run
+
+```
+$ npm start
+```
+
+---
+
 (angular-cli)
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.24.
