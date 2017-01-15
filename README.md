@@ -5,10 +5,9 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ## Setup
 
-ATTENTION) As of 2017/01/15, building this app is failed by one of the angular-cli's libs, sorry.
-
 ```
-$ npm install
+$ yarn install  (DO NOT npm install)
+$ npm run overwrite  (<-- Important!)
 ```
 
 ## Run
