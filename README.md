@@ -7,13 +7,14 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ```
 $ yarn install  (DO NOT npm install)
-$ npm run overwrite  (<-- Important!)
 ```
 
 ## Run
 
 ```
 $ npm start
+or
+$ npm run s
 ```
 
 ---

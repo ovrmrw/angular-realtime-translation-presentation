@@ -1,5 +1,5 @@
 "use strict";
-var webpack = require('webpack')
+var webpack = require('webpack'); // ADDED
 var path = require('path');
 var webpack_1 = require('@ngtools/webpack');
 var g = global;
@@ -18,7 +18,7 @@ exports.getWebpackNonAotConfigPartial = function (projectRoot, appConfig) {
         {
           test: /\.ts$/,
           // loader: webpackLoader,
-          loaders: ['light-ts-loader', 'angular2-template-loader?keepUrl=true'],
+          loaders: ['light-ts-loader', 'angular2-template-loader?keepUrl=true'], // EDITED
           exclude: [/\.(spec|e2e)\.ts$/]
         }
       ]
@@ -30,8 +30,7 @@ exports.getWebpackNonAotConfigPartial = function (projectRoot, appConfig) {
         exclude: exclude,
         skipCodeGeneration: true
       }),
-      new webpack.LoaderOptionsPlugin({
-        // use `path.resolve("tsconfig.json")` by default.
+      new webpack.LoaderOptionsPlugin({ // ADDED
         tsConfigPath: path.resolve(projectRoot, appConfig.root, appConfig.tsconfig),
       })
     ]
