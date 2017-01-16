@@ -3,6 +3,8 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ---
 
+(!) AoT compile is not supported.
+
 ## Setup
 
 ```
