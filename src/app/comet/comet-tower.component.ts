@@ -9,7 +9,7 @@ import { AppState, KEY } from '../../state'
 @Component({
   selector: 'app-comet-tower',
   template: `
-    <app-comet *ngFor="let c of comets let i = index" [text]="c.text" [top]="c.top" [color]="c.color" [index]="i + 1">
+    <app-comet *ngFor="let c of comets; let i = index" [text]="c.text" [top]="c.top" [color]="c.color" [index]="i + 1">
     </app-comet>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
