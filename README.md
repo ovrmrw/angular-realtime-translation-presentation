@@ -3,12 +3,14 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ---
 
-(!) AoT compile is not supported.
+ATTENTION) AoT compile is not supported.
 
 ## Setup
 
 ```
-$ yarn install  (DO NOT npm install)
+$ yarn install
+or
+$ npm install
 ```
 
 ## Run
