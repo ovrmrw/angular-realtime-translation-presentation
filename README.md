@@ -3,7 +3,9 @@ Realtime Translation Presentation using Angular and RxJS.
 
 ---
 
-ATTENTION) AoT compile is not supported.
+(ATTENTION: AoT compile is not supported.)
+
+Using with [ovrmrw/cognitive-server-starter](https://github.com/ovrmrw/cognitive-server-starter) backend.
 
 ## Setup
 
