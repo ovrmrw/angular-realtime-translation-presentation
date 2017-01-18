@@ -13,15 +13,15 @@ import { FlashComponent } from './flash'
 import { LangSelectorComponent } from './lang-selector'
 import { SlideUrlComponent } from './slide-url'
 
-import { initialState } from '../state'
+import { ReactiveStoreService, storeInstance } from '../state'
 import {
-  StoreQueueConcurrent, StoreInitialState, WatsonSpeechToTextStartOption,
+  WatsonSpeechToTextStartOption,
   GcpTranslatorUrl, McsTranslatorUrl, UseMockTranslator,
 } from '../opaque-tokens'
 import {
-  storeQueueConcurrent, watsonSpeechToTextStartOption,
+  watsonSpeechToTextStartOption,
   gcpTranslatorUrl, mcsTranslatorUrl, useMockTranslator,
-} from '../config';
+} from '../config'
 
 
 
@@ -43,12 +43,11 @@ import {
     LibModule,
   ],
   providers: [
-    { provide: StoreQueueConcurrent, useValue: storeQueueConcurrent },
-    { provide: StoreInitialState, useValue: initialState },
     { provide: WatsonSpeechToTextStartOption, useValue: watsonSpeechToTextStartOption },
     { provide: GcpTranslatorUrl, useValue: gcpTranslatorUrl },
     { provide: McsTranslatorUrl, useValue: mcsTranslatorUrl },
     { provide: UseMockTranslator, useValue: useMockTranslator },
+    { provide: ReactiveStoreService, useValue: storeInstance }
   ],
   bootstrap: [AppComponent]
 })

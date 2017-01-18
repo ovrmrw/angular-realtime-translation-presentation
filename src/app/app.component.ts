@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core'
 
 import { Disposer } from '../lib/class'
-import { SimpleStore } from '../lib/simple-store'
-import { AppState } from '../state'
-import { WindowService } from '../lib/dom';
+import { WindowService } from '../lib/dom'
 
 
 @Component({
@@ -30,7 +28,6 @@ import { WindowService } from '../lib/dom';
 })
 export class AppComponent extends Disposer implements OnInit, OnDestroy {
   constructor(
-    private store: SimpleStore<AppState>,
     private cd: ChangeDetectorRef,
     private __windowService: WindowService,
   ) {

@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, Inject } from '@angular/core'
 
 import { MicrophoneService } from '../../lib/microphone'
-import { SimpleStore } from '../../lib/simple-store'
-import { AppState, TranslationConfig, KEY } from '../../state'
-import { GcpTranslatorUrl, McsTranslatorUrl } from '../../opaque-tokens';
+import { ReactiveStoreService, TranslationConfig, KEY } from '../../state'
+import { GcpTranslatorUrl, McsTranslatorUrl } from '../../opaque-tokens'
 
 
 const EnToJaGcp = 'en -> ja (GCP)'
@@ -51,7 +50,7 @@ export class LangSelectorComponent implements OnInit {
 
 
   constructor(
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     private micService: MicrophoneService,
     @Inject(GcpTranslatorUrl)
     private gcpTranslatorUrl: string,

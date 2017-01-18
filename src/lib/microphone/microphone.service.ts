@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core'
 import { WatsonSpeechToTextWebSocketService } from '../websocket'
 const Microphone = require('./ibm/Microphone') // written by IBM
 
-import { SimpleStore 　} from '../simple-store'
-import { AppState, MicrophoneState, KEY } from '../../state'
+import { ReactiveStoreService, MicrophoneState, KEY } from '../../state'
 
 
 const AudioCtx = window.AudioContext
@@ -31,7 +30,7 @@ export class MicrophoneService {
 
   constructor(
     private recognizeService: WatsonSpeechToTextWebSocketService,
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
   ) {
     this.initGetState()
   }

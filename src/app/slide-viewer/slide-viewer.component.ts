@@ -3,15 +3,13 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
-import { SimpleStore } from '../../lib/simple-store'
-import { AppState, KEY } from '../../state'
-import { slideViewerId } from '../../config';
+import { ReactiveStoreService, KEY } from '../../state'
 
 
 @Component({
   selector: 'app-slide-viewer',
   template: `
-    <iframe [id]="slideViewerId"
+    <iframe
       [src]="safeUrl"
       frameborder="0" [width]="screenWidth" [height]="screenHeight" allowfullscreen="true" 
       mozallowfullscreen="true" webkitallowfullscreen="true">
@@ -23,12 +21,11 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy,
   screenWidth: number
   screenHeight: number
   safeUrl: SafeResourceUrl
-  slideViewerId: string
   viewerElement: HTMLIFrameElement
 
 
   constructor(
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     private cd: ChangeDetectorRef,
     private el: ElementRef,
     private sanitizer: DomSanitizer,
@@ -38,7 +35,6 @@ export class SlideViewerComponent extends Disposer implements OnInit, OnDestroy,
 
 
   ngOnInit() {
-    this.slideViewerId = slideViewerId
     this.viewerElement = this.el.nativeElement.querySelector('iframe')
     this.initGetState()
   }

@@ -3,11 +3,8 @@ import { NgModule } from '@angular/core'
 import { WebSocketModule } from './websocket'
 import { MicrophoneModule } from './microphone'
 import { WatsonModule } from './watson'
-// import { GcpModule } from './gcp'
-import { SimpleStoreModule } from './simple-store'
 import { DomModule } from './dom'
-// import { McsModule } from './mcs'
-import { TranslatorModule } from './translator';
+import { TranslatorModule } from './translator'
 
 
 @NgModule({
@@ -15,10 +12,7 @@ import { TranslatorModule } from './translator';
     WebSocketModule,
     MicrophoneModule,
     WatsonModule,
-    // GcpModule,
-    SimpleStoreModule,
     DomModule,
-    // McsModule,
     TranslatorModule,
   ]
 })

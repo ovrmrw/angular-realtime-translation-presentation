@@ -5,8 +5,7 @@ import * as lodash from 'lodash'
 import { WatsonSpeechToTextStartOption } from './common'
 import { WatsonSpeechToTextService } from '../watson'
 import { TranslatorService } from '../translator'
-import { SimpleStore } from '../simple-store'
-import { AppState, RecognizedObject, KEY } from '../../state'
+import { ReactiveStoreService, AppState, RecognizedObject, KEY } from '../../state'
 
 
 const RECOGNIZE_URL = 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
@@ -35,7 +34,7 @@ export class WatsonSpeechToTextWebSocketService {
 
 
   constructor(
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     private recognizeService: WatsonSpeechToTextService,
     private translateService: TranslatorService,
     @Inject(WatsonSpeechToTextStartOption) @Optional()
@@ -106,38 +105,30 @@ export class WatsonSpeechToTextWebSocketService {
   }
 
 
-  async onMessage(event): Promise<AppState | null> {
-    let appState: AppState | null = null
-
+  onMessage(event): void {
     console.log('ws.onmessage:', event)
     const data = JSON.parse(event.data) as RecognizedObject
     console.log('data:', data)
 
     if (data.error) { // ex. in case of error -> {"error": "No speech detected for 10s."}
       this.webSocketStop()
-      return appState
+      return
     }
 
     if (data && data.results) {
-      appState = await this.store.setter(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
+      this.store.setter(KEY.recognized, (p) => data.state ? p : data) // ex. in case of state -> {"state": "listening"}
 
       if (data.results[0].final) { // 認識が完了しているかどうか。
-        // const transcript = data.results[0].alternatives[0].transcript
-        //   .split(' ')
-        //   .filter(text => !text.match(/^D_/))
-        //   .filter(text => !text.match(/^%HESITATION/))
-        //   .join(' ').trim()
         const transcript = transcriptFinisher(data.results[0].alternatives[0].transcript)
 
         if (transcript) {
-          appState = await this.store.setter(KEY.transcript, transcript)
-            .then(s => this.store.setter(KEY.transcriptList, (p) => [...p, transcript]))
-            .then(s => this.store.setter(KEY.translated, this.translateService.requestTranslate(transcript)))
-            .then(s => this.store.setter(KEY.translatedList, (p) => [...p, s.translated]))
+          this.store.setter(KEY.transcript, transcript)
+            .then(() => this.store.setter(KEY.transcriptList, (p) => [...p, transcript]))
+            .then(() => this.store.setter(KEY.translated, this.translateService.requestTranslate(transcript)))
+            .then(() => this.store.setter(KEY.translatedList, (p, a) => [...p, a.translated]))
         }
       }
     }
-    return appState
   }
 
 

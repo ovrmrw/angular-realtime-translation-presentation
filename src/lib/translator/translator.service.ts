@@ -1,16 +1,15 @@
 import { Injectable, Inject, Optional } from '@angular/core'
 import { Http } from '@angular/http'
 
-import { SimpleStore } from '../simple-store'
-import { AppState } from '../../state'
-import { UseMockTranslator } from '../../opaque-tokens';
+import { ReactiveStoreService } from '../../state'
+import { UseMockTranslator } from '../../opaque-tokens'
 
 
 @Injectable()
 export class TranslatorService {
   constructor(
     private http: Http,
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     @Inject(UseMockTranslator) @Optional()
     private useMockTranslator: boolean | null,
   ) { }

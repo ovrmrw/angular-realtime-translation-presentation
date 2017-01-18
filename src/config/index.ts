@@ -1,6 +1,3 @@
-export const storeQueueConcurrent: number = 99
-
-
 export const watsonSpeechToTextStartOption = {
   interim_results: true,
   continuous: true,
@@ -20,6 +17,3 @@ export const mcsTranslatorUrl: string = 'http://localhost:4000/api/mcs/translato
 
 
 export const useMockTranslator: boolean = false
-
-
-export const slideViewerId: string = 'slide-viewer'

@@ -1,4 +1,4 @@
-import { ObjectKeys } from './lib/simple-store';
+import { ReactiveStore, LoopType, ObjectKeys, getReactiveStoreAsSingleton } from 'ovrmrw-reactive-store'
 
 
 export const initialState: AppState = {
@@ -21,7 +21,6 @@ export const initialState: AppState = {
     engine: '', // 'gcp',
     translatorUrl: '',
   },
-  // slideUrl: '',
   slideViwerConfig: {
     url: '',
     element: null,
@@ -41,7 +40,6 @@ export interface AppState {
   socketState: string,
   windowState: WindowState,
   translationConfig: TranslationConfig,
-  // slideUrl: string,
   slideViwerConfig: SlideViwerConfig,
   signalFocusSlideViewer: null,
 }
@@ -58,12 +56,23 @@ export const KEY: ObjectKeys<AppState> = {
   socketState: 'socketState',
   windowState: 'windowState',
   translationConfig: 'translationConfig',
-  // slideUrl: 'slideUrl',
   slideViwerConfig: 'slideViwerConfig',
   signalFocusSlideViewer: 'signalFocusSlideViewer',
 }
 
 
+export const storeInstance = getReactiveStoreAsSingleton(initialState, {
+  concurrent: 99,
+  output: true,
+  loopType: LoopType.asap,
+})
+
+
+export class ReactiveStoreService extends ReactiveStore<AppState> { }
+
+
+
+/////////////////////////////////////////////////////////// Interfaces
 export interface MicrophoneState {
   isActive: boolean
 }

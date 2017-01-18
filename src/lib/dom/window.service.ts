@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { SimpleStore } from '../simple-store'
-import { AppState, WindowState, KEY } from '../../state'
+import { ReactiveStoreService, WindowState, KEY } from '../../state'
 
 
 @Injectable()
 export class WindowService {
   constructor(
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
   ) {
     this.updateWindowState()
     this.initObservableEvents()

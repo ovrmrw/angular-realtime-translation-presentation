@@ -2,8 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { Observable } from 'rxjs'
 
 import { Disposer } from '../../lib/class'
-import { SimpleStore } from '../../lib/simple-store'
-import { AppState, KEY } from '../../state'
+import { ReactiveStoreService, KEY } from '../../state'
 
 
 @Component({
@@ -19,7 +18,7 @@ export class FlashComponent extends Disposer implements OnInit, OnDestroy {
 
 
   constructor(
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     private cd: ChangeDetectorRef,
   ) {
     super()

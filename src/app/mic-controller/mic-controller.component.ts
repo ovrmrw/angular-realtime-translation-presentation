@@ -2,9 +2,7 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 
 import { Disposer } from '../../lib/class'
 import { MicrophoneService } from '../../lib/microphone'
-import { SimpleStore } from '../../lib/simple-store'
-import { AppState, KEY } from '../../state'
-import { slideViewerId } from '../../config';
+import { ReactiveStoreService, KEY } from '../../state'
 
 
 @Component({
@@ -23,7 +21,7 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
 
   constructor(
     private microphoneService: MicrophoneService,
-    private store: SimpleStore<AppState>,
+    private store: ReactiveStoreService,
     private cd: ChangeDetectorRef,
   ) {
     super()
@@ -52,20 +50,12 @@ export class MicControllerComponent extends Disposer implements OnInit, OnDestro
 
   record() {
     this.microphoneService.record()
-    this.focusSlideViewer()
+    this.store.setter(KEY.signalFocusSlideViewer, null)
   }
 
 
   stop() {
     this.microphoneService.stop()
-    this.focusSlideViewer()
-  }
-
-
-  /**
-   * スライドにフォーカスを移してiframeのスライドがキーボードイベントをキャッチできるようにする。
-   */
-  focusSlideViewer() {
     this.store.setter(KEY.signalFocusSlideViewer, null)
   }
 
