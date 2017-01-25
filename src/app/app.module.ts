@@ -13,7 +13,7 @@ import { FlashComponent } from './flash'
 import { LangSelectorComponent } from './lang-selector'
 import { SlideUrlComponent } from './slide-url'
 
-import { ReactiveStoreService, storeInstance } from '../state'
+import { ReactiveStoreService } from '../state'
 import {
   WatsonSpeechToTextStartOption,
   GcpTranslatorUrl, McsTranslatorUrl, UseMockTranslator,
@@ -43,11 +43,11 @@ import {
     LibModule,
   ],
   providers: [
+    ReactiveStoreService,
     { provide: WatsonSpeechToTextStartOption, useValue: watsonSpeechToTextStartOption },
     { provide: GcpTranslatorUrl, useValue: gcpTranslatorUrl },
     { provide: McsTranslatorUrl, useValue: mcsTranslatorUrl },
     { provide: UseMockTranslator, useValue: useMockTranslator },
-    { provide: ReactiveStoreService, useValue: storeInstance }
   ],
   bootstrap: [AppComponent]
 })

@@ -2949,7 +2949,7 @@ lodash.camelcase@^3.0.1:
   dependencies:
     lodash._createcompounder "^3.0.0"
 
-lodash.clonedeep@^4.3.2:
+lodash.clonedeep@^4.3.2, lodash.clonedeep@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
 
@@ -3682,11 +3682,12 @@ osenv@0, osenv@^0.1.0:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
 
-ovrmrw-reactive-store@^0.0.11:
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/ovrmrw-reactive-store/-/ovrmrw-reactive-store-0.0.11.tgz#527385a7a71baf4c7fee22c932caf93d62e96439"
+ovrmrw-reactive-store@^0.0.22:
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/ovrmrw-reactive-store/-/ovrmrw-reactive-store-0.0.22.tgz#38a5c9e9459d970f984d3278286b2bc3955bd56f"
   dependencies:
     asap "^2.0.5"
+    lodash.clonedeep "^4.5.0"
     rxjs "^5.0.3"
     setimmediate "^1.0.5"
 

@@ -27,7 +27,7 @@ export class CometTowerComponent extends Disposer implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.flowTestTexts()
+    // this.flowTestTexts()
     this.initGetState()
   }
 

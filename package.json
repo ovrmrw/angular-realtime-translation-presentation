@@ -27,7 +27,7 @@
     "asap": "^2.0.5",
     "core-js": "^2.4.1",
     "lodash": "^4.17.3",
-    "ovrmrw-reactive-store": "^0.0.11",
+    "ovrmrw-reactive-store": "^0.0.22",
     "rxjs": "^5.0.1",
     "setimmediate": "^1.0.5",
     "ts-helpers": "^1.1.1",
